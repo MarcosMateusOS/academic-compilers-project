@@ -18,15 +18,18 @@ public enum TOKEN_TYPE {
 
     // EXP
     EQUALITY_SIGN, // == 
-    NOT_EQUAL_SIGN,
-    LESSER_THAN,
-    GREATER_THAN,
-    PLUS_SIGN,
-    MINUS_SIGN,
+    NOT_EQUAL_SIGN, // !-
+    LESSER_THAN, // <
+    GREATER_THAN, // >
+    AND_SIGN, // &&
+
+    PLUS_SIGN, // +
+    MINUS_SIGN,  
     MULT_SIGN,
     DIVIDE_SIGN,
-    MOD_SIGN,
-    AND_SIGN,// &&
+    MOD_SIGN, 
+    NOT_SIGN, 
+    HYPHEN_SIGN,
 
 
     EQUAL, // =
@@ -57,7 +60,6 @@ public enum TOKEN_TYPE {
     BOOL,
     FLOAT,
     DATA,
-    NEW,
-    NOT_SIGN, 
-    HYPHEN_SIGN,
+    NEW
+ 
 }

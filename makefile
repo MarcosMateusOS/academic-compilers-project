@@ -10,4 +10,3 @@ run-lexer:
 	javac -d classes ./src/*.java ./src/modules/**/*.java
 	
 
-	

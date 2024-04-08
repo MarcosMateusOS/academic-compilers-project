@@ -39,32 +39,91 @@
 %init}
 
   
-  /* Agora vamos definir algumas macros */
-  FimDeLinha  = \r|\n|\r\n
-  Brancos     = {FimDeLinha} | [ \t\f]
-  numero      = [:digit:] [:digit:]*
-  identificador = [:lowercase:]
-  LineComment = "//" (.)* {FimDeLinha}
-  
+
+
+  numInteger = [:digit:]+
+  numFloat = ([:digit:]* "." ([:digit:] [:digit:]*))
+  letter = [:letter:]
+  id = [:lowercase:] ({letter} | "_" | [:digit:])*
+  nameType = [:uppercase:] ({letter} | "_" | [:digit:])*
+
+
+  endOfLine = \r|\n|\r\n
+  whiteSpace = {endOfLine} | [ \t\f]
+  lineComment = "--" (.) * {endOfLine}
+    
 %state COMMENT
 
 %%
 
 <YYINITIAL>{
-    {identificador} { return symbol(TOKEN_TYPE.ID);   }
-    {numero}        { return symbol(TOKEN_TYPE.NUM, Integer.parseInt(yytext()) );  }
-    "="             { return symbol(TOKEN_TYPE.EQ);   }
-    ";"             { return symbol(TOKEN_TYPE.SEMI); }
-    "*"             { return symbol(TOKEN_TYPE.TIMES); }
-    "+"             { return symbol(TOKEN_TYPE.PLUS); }
-    "/*"            { yybegin(COMMENT);               }
-    {Brancos}       { /* Não faz nada  */             }
-    {LineComment}   {                       }
+   
+    //Reservado
+    "true" { return symbol(TOKEN_TYPE.TRUE);}
+    "false" { return symbol(TOKEN_TYPE.FALSE);}
+    "null" { return symbol(TOKEN_TYPE.NULL);}
+    "Int" { return symbol(TOKEN_TYPE.INT);}
+    "Char" { return symbol(TOKEN_TYPE.CHAR);}
+    "Bool" { return symbol(TOKEN_TYPE.BOOL);}
+    "Float" { return symbol(TOKEN_TYPE.FLOAT);}
+    "data" { return symbol(TOKEN_TYPE.DATA);}
+    "new" { return symbol(TOKEN_TYPE.NEW);}
+    
+    // CMD
+    "if" { return symbol(TOKEN_TYPE.IF);}
+    "else" { return symbol(TOKEN_TYPE.ELSE);}
+    "iterate" { return symbol(TOKEN_TYPE.ITERATE);}
+    "read" { return symbol(TOKEN_TYPE.READ);}
+    "print" { return symbol(TOKEN_TYPE.PRINT);}
+    "return" { return symbol(TOKEN_TYPE.RETURN);}
+
+    {id} { return symbol(TOKEN_TYPE.ID);   }
+    {numInteger} { return symbol(TOKEN_TYPE.INT_VAL, Integer.parseInt(yytext()) );}
+    {numFloat} { return symbol(TOKEN_TYPE.FLOAT_VAL, Float.parseFloat(yytext()) ); }
+    {letter} { return symbol(TOKEN_TYPE.CHAR_VAL);}
+    {nameType} { return symbol(TOKEN_TYPE.NAME_VAL);}
+
+
+    // Logicos 
+    "==" { return symbol(TOKEN_TYPE.EQUALITY_SIGN);}
+    "!=" { return symbol(TOKEN_TYPE.NOT_EQUAL_SIGN);}
+    "<" { return symbol(TOKEN_TYPE.LESSER_THAN);}
+    ">" {return symbol(TOKEN_TYPE.GREATER_THAN);}
+    "&&" {return symbol(TOKEN_TYPE.AND_SIGN);}
+
+    // Simbolos
+    "+" {return symbol(TOKEN_TYPE.PLUS_SIGN);}
+    "-" {return symbol(TOKEN_TYPE.MINUS_SIGN);}
+    "*" {return symbol(TOKEN_TYPE.MULT_SIGN);}
+    "/" {return symbol(TOKEN_TYPE.DIVIDE_SIGN);}
+    "%" {return symbol(TOKEN_TYPE.MOD_SIGN);}
+    "!" {return symbol(TOKEN_TYPE.NOT_SIGN);}
+    "=" {return symbol(TOKEN_TYPE.EQUAL);}
+    "&" {return symbol(TOKEN_TYPE.AMPERSAND);}
+    "." {return symbol(TOKEN_TYPE.COMMA);}
+    ";" {return symbol(TOKEN_TYPE.SEMICOLON);}
+    ":" {return symbol(TOKEN_TYPE.DOUBLE_COLON);}
+    "(" {return symbol(TOKEN_TYPE.OPEN_PARENT);}
+    ")" {return symbol(TOKEN_TYPE.OPEN_PARENT);}
+    "{" {return symbol(TOKEN_TYPE.OPEN_BRECKET);}
+    "}" {return symbol(TOKEN_TYPE.CLOSE_BRECKET);}
+    "[" {return symbol(TOKEN_TYPE.OPEN_BRACE);}
+    "]" {return symbol(TOKEN_TYPE.CLOSE_BRACE);}
+
+
+ 
+    
+    "{-"            { yybegin(COMMENT);               }
+    {whiteSpace}       { /* Não faz nada  */             }
+    {lineComment}   {                       }
 }
 
 <COMMENT>{
-   "*/"     { yybegin(YYINITIAL); } 
-   [^"*/"]* {                     }
+   "--"     { yybegin(YYINITIAL); } 
+   "-}"     { yybegin(YYINITIAL); }
+   [^"-}"]* {                     } //Ignora != -}
+   "-"      {                     }
+   "}"      {                     }
 }
 
 
