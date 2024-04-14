@@ -1,20 +1,27 @@
+/*
+    Grupo: Marcos Mateus Oliveira dos Santos - 201835019
+           Giovane Nilmer de Oliveira Santos - 201835012
+
+*/
+
+
+// Enum com todos os tipos de token da linguagem Lang
 public enum TOKEN_TYPE {
 
     // BType
-    ID,
-    INT_VAL,
-    CHAR_VAL,
-    FLOAT_VAL,
-    NAME_VAL,
-   
+    ID, // Identificadores
+    INT_VAL, // Valores dos inteiros
+    CHAR_VAL, // Valores dos caracteres
+    FLOAT_VAL, // Valores dos booleanos
+    NAME_VAL,   
 
-    // CMD
-    IF,
-    ELSE,
-    ITERATE,
-    READ,
-    PRINT,
-    RETURN,
+    // CMD - Palavras reservadas
+    IF, // if
+    ELSE, // else
+    ITERATE,// iterate
+    READ, // read
+    PRINT, // print
+    RETURN, // return
 
     // EXP
     EQUALITY_SIGN, // == 
@@ -24,42 +31,43 @@ public enum TOKEN_TYPE {
     AND_SIGN, // &&
 
     PLUS_SIGN, // +
-    MINUS_SIGN,  
-    MULT_SIGN,
-    DIVIDE_SIGN,
-    MOD_SIGN, 
-    NOT_SIGN, 
-    HYPHEN_SIGN,
+    MINUS_SIGN, // -
+    MULT_SIGN, // *
+    DIVIDE_SIGN, // /
+    MOD_SIGN, // % 
+    NOT_SIGN,// ! 
+
 
 
     EQUAL, // =
     AMPERSAND, //&
-    PERCENT,
-    DOT,
-    COMMA,
-    SEMICOLON,
-    COLON,
-    DOUBLE_COLON,
-    OPEN_PARENT,
-    CLOSE_PARENT,
-    OPEN_BRECKET,
-    CLOSE_BRECKET,
-    OPEN_BRACE,
-    CLOSE_BRACE,
-    EOF,
+    DOT, // .
+    COMMA, // ,
+    SEMICOLON,// ;
+    COLON,// :
+    DOUBLE_COLON,// ::
+    OPEN_PARENT,// (
+    CLOSE_PARENT,// /
+    OPEN_BRECKET,// {
+    CLOSE_BRECKET,// }
+    OPEN_BRACE,// [
+    CLOSE_BRACE,// ]
+    SINGLE_QUOTES,// '
+    BACK_SLASH,// \
+    EOF,// \r|\n|\r\n
 
 
   
 
-    //RESERVADO
-    TRUE,
-    FALSE,
-    NULL,
-    INT,
-    CHAR,
-    BOOL,
-    FLOAT,
-    DATA,
-    NEW
+    //RESERVADO - Tipos
+    TRUE,// true
+    FALSE,// false
+    NULL,// null
+    INT,// int
+    CHAR,// char
+    BOOL,// bool
+    FLOAT,// float
+    DATA,// data
+    NEW// new
  
 }

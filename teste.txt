@@ -1,0 +1,24 @@
+-- Comentario de linha
+main ( ) {
+    print fat (2.00) ; -- Comentario em linha
+}
+
+##
+
+fat (num :: Int ) : Int {
+    if (num < 1 )
+        return 1;
+    else
+        return num fat (num-1);
+}
+
+{-
+    Comentario com 
+    multiplas linhas
+-}
+
+divmod (num :: Int , div :: Int ) : Int , Int {
+    q = num / div;
+    r = num % div;
+    return q , r;
+}
