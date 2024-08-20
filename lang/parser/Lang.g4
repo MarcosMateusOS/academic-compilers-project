@@ -8,9 +8,9 @@ package lang.parser;
 /* Regras da gramática */
 prog    : data* fun* #Program ; 
 
-data    : DATA_TYPE NAME_TYPE OPEN_BRACE decl* CLOSE_BRACE #DataDeclaration ;
+data    : DATA_TYPE NAME_TYPE OPEN_BRACE decl* CLOSE_BRACE #Datas ;
 
-decl    : ID DOUBLE_COLON type SEMICOLON #VarDeclaration ;
+decl    : ID DOUBLE_COLON type SEMICOLON #DataDeclaration ;
 
 fun     : ID OPEN_PARENT params? CLOSE_PARENT (COLON type (COMMA type)*)? OPEN_BRACE cmd* CLOSE_BRACE #FunDeclaration ;
 

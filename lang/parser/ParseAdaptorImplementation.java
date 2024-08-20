@@ -17,7 +17,7 @@ import lang.ast.SuperNode;
 public class ParseAdaptorImplementation implements ParseAdaptor {
 
 	@Override
-	public SuperNode parseFile(String path) throws IOException {
+	public SuperNode parseFile(String path){
 		CharStream stream = CharStreams.fromFileName(path);
 		// create a lexer that feeds off of stream
 		LangLexer lex = new LangLexer(stream);

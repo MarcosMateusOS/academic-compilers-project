@@ -1,6 +1,9 @@
 package lang.ast;
 
-public class Node extends SuperNode {
+import lang.interpreter.Visitable;
+import lang.interpreter.Visitor;
+
+public class Node extends SuperNode implements Visitable {
     
     private int line;
     private int col;
@@ -24,4 +27,9 @@ public class Node extends SuperNode {
     public int getColumn() {
         return col;
     }  
+
+    @Override
+    public void accept(Visitor v) {
+
+    }    
 }
