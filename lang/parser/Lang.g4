@@ -12,19 +12,18 @@ data    : DATA_TYPE NAME_TYPE OPEN_BRACE decl* CLOSE_BRACE #Datas ;
 
 decl    : ID DOUBLE_COLON type SEMICOLON #DataDeclaration ;
 
-fun     : ID OPEN_PARENT params? CLOSE_PARENT (COLON type (COMMA type)*)? OPEN_BRACE cmd* CLOSE_BRACE #FunDeclaration ;
+fun     : ID OPEN_PARENT params? CLOSE_PARENT (COLON type (COMMA type)*)? OPEN_BRACE cmd* CLOSE_BRACE #Function;
 
-params  : ID DOUBLE_COLON type (COMMA ID DOUBLE_COLON type)* #ParamsDeclaration ;
+params  : ID DOUBLE_COLON type (COMMA ID DOUBLE_COLON type)* #Param;
 
 type    : btype #BasicType
         | type OPEN_BRACKET CLOSE_BRACKET #ArrayType;
 
-btype   : INT_TYPE #Int
+btype   : INT_TYPE #IntType
         | CHAR_TYPE #CharType
         | BOOL_TYPE #BoolType
         | FLOAT_TYPE #FloatType
         | NAME_TYPE #NameType
-        | ID #IdType
         ;
 
 cmd     : OPEN_BRACE cmd* CLOSE_BRACE #CommandList
@@ -33,38 +32,57 @@ cmd     : OPEN_BRACE cmd* CLOSE_BRACE #CommandList
         | ITERATE OPEN_PARENT exp CLOSE_PARENT cmd #IterateCommand
         | READ lvalue SEMICOLON #ReadCommand
         | PRINT exp SEMICOLON #PrintCommand
-        | RETURN exp? SEMICOLON #ReturnCommand
-        | RETURN exps? SEMICOLON  #ReturnMultCommand // Múltiplos 
+        | RETURN exp SEMICOLON #ReturnCommand
+        | RETURN exp (COMMA exp)* SEMICOLON  #ReturnMultCommand // Múltiplos 
         | lvalue EQUAL exp SEMICOLON #AssignCommand
-        | ID OPEN_PARENT exps? CLOSE_PARENT (LESSER_THAN lvalue (COMMA lvalue)* GREATER_THAN)? SEMICOLON #CallCommand
+        | ID OPEN_PARENT exps? CLOSE_PARENT (LESSER_THAN lvalue (COMMA lvalue)* GREATER_THAN)? SEMICOLON #FunctionCall
         ;
 
-exp     : exp AND_SIGN exp #AndExp
-        | exp LESSER_THAN exp #LesserThanExp
-        | exp EQUALITY_SIGN exp #EqualityExp
-        | exp NOT_EQUAL_SIGN exp #HotEqualExp
-        | exp PLUS_SIGN exp #PlusExp
-        | exp MINUS_SIGN exp #MinusExp
-        | exp MULT_SIGN exp #MultExp
-        | exp DIVIDE_SIGN exp #DivExp
-        | exp MOD_SIGN exp #ModExp
-        | NOT_SIGN exp #NotSignExp
-        | MINUS_SIGN exp #MinusSignExp
-        | TRUE #True
-        | FALSE #False
-        | NULL #Null
-        | INT_VAL #IntVal
-        | FLOAT_VAL #FloatVal
-        | CHAR_VAL #CharVal
-        | lvalue #LValueExp
-        | OPEN_PARENT exp CLOSE_PARENT #ExpParen 
-        | NEW type (OPEN_BRACKET exp CLOSE_BRACKET)? #New
-        | ID OPEN_PARENT exps? CLOSE_PARENT OPEN_BRACKET exp CLOSE_BRACKET #ArrayAccess
-        ;
+/*Modularizando as exp*/
+exp
+    : exp AND_SIGN rexp                #AndExp
+    | rexp                             #ReExp
+    ;
 
-lvalue  : ID #IdLvalue
-        | lvalue OPEN_BRACKET exp CLOSE_BRACKET #ArrayLvalue
-        | lvalue DOT ID #DotLvalue
+rexp
+    : rexp LESSER_THAN aexp            #LesserThanExp
+    | rexp EQUALITY_SIGN aexp          #EqualityExp
+    | rexp NOT_EQUAL_SIGN aexp         #NotEqualExp
+    | aexp                             #AExp
+    ;
+
+aexp
+    : aexp PLUS_SIGN mexp              #PlusExp
+    | aexp MINUS_SIGN mexp             #MinusExp
+    | mexp                             #MExp
+    ;
+
+mexp
+    : mexp MULT_SIGN sexp              #MultExp
+    | mexp DIVIDE_SIGN sexp            #DivExp
+    | mexp MOD_SIGN sexp               #ModExp
+    | sexp                             #SExp
+    ;
+
+sexp
+    : NOT_SIGN sexp                    #NotSignExp
+    | MINUS_SIGN sexp                  #MinusSignExp
+    | TRUE                             #True
+    | FALSE                            #False
+    | NULL                             #Null
+    | INT_VAL                          #IntVal
+    | FLOAT_VAL                        #FloatVal
+    | CHAR_VAL                         #CharVal
+    | OPEN_PARENT exp CLOSE_PARENT     #ParenExp
+    | NEW type (OPEN_BRACKET exp CLOSE_BRACKET)? #NewTypeExp
+    | ID OPEN_PARENT exps? CLOSE_PARENT OPEN_BRACKET exp CLOSE_BRACKET #FuncReturnExp
+    | lvalue                           #LValueExp
+    ;
+
+
+lvalue  : ID #IDLValue
+        | lvalue OPEN_BRACKET exp CLOSE_BRACKET #ArrayAccess
+        | lvalue DOT ID #DotLValue
         ;
 
 exps    : exp (COMMA exp)* #FunCallParams;

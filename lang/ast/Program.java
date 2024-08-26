@@ -5,12 +5,14 @@ import java.util.List;
 import lang.interpreter.Visitor;
 
 public class Program extends Node {
-    //private List functions = f
+   
     private List<Data> datas;
+    private List<Function> functions;
 
     public Program(int line, int col) {
         super(line,col);
-        this.datas = new ArrayList<>();
+        this.datas = new ArrayList<Data>();
+        this.functions = new ArrayList<Function>();
     }
 
 
@@ -21,6 +23,15 @@ public class Program extends Node {
     public List<Data> getDatas() {
         return datas;
     }
+    
+    public void addFunctions(Function function) {
+        this.functions.add(function);
+    }
+
+    public List<Function> getFunction() {
+        return functions;
+    }
+
 
   
     @Override
