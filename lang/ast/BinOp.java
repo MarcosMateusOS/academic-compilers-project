@@ -8,8 +8,6 @@ public abstract class BinOp extends Exp{
 	protected Exp right;
 	
 	
-	
-	
     public BinOp(int line, int col, Exp left, Exp right) {
         super(line, col);
         

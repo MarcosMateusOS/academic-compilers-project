@@ -45,14 +45,16 @@ gen-ast:
 	@echo "Gerando AST"
 	javac -cp $(ANTLR_JAR):. $(AST_DIR)/*.java
 
-run-test:
-	@echo "Executando o compilador"
+run-test-parser:
+	@echo "Executando o Parser"
 	java -cp $(ANTLR_JAR):. lang.LangCompiler -bs
 	
-run-test-it:
-	@echo "Executando o compilador"
+run-test-it: 
+	@echo "Executando Interpreter"
 	java -cp $(ANTLR_JAR):. lang.LangCompiler -bsm
-run: 
-	@echo "Executando o compilador"
-	java -cp $(ANTLR_JAR):. lang.LangCompiler -i teste.lan
+	
+run:
+	@echo "Executando o compilador com os argumentos fornecidos"
+	java -cp $(ANTLR_JAR):. lang.LangCompiler $(action) $(path)
+	
 .PHONY: all compile gen-parser clean-cache gen-ast run

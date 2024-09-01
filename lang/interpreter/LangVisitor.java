@@ -1,3 +1,9 @@
+/*
+    Grupo: Marcos Mateus Oliveira dos Santos - 201835019
+           Giovane Nilmer de Oliveira Santos - 201835012
+
+*/
+
 package lang.interpreter;
 
 import java.util.List;
@@ -8,22 +14,29 @@ import lang.parser.LangParser;
 import lang.parser.LangParser.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-/*Classe que extende a Interface LangBaseVisitor gerado ANTL */
+/**
+ * Classe LangVisitor estende LangBaseVisitor, gerado pelo ANTLR. Esta classe é
+ * responsável por percorrer a árvore de análise sintática gerada pelo ANTLR.
+ * 
+ * Cada método 'visit' implementado nesta classe lida com um tipo específico de
+ * nó da gramática, transformando-o em um elemento correspondente na estrutura
+ * AST do programa.
+ */
 public class LangVisitor extends LangBaseVisitor<Node> {
+	
+	/*ProgramContext: Visita o nó raiz do Programa*/
 	@Override
 	public Node visitProgram(ProgramContext ctx) {
 
 		Program program = new Program(ctx.start.getLine(), ctx.start.getCharPositionInLine());
-	
 
-
-
-		// Visit datas
+		// Inicia o visit por todo os nós que representa o tipo data
 		for (int i = 0; i < ctx.data().size(); i++) {
 			ParseTree child = ctx.data(i);
 			program.addData((Data) this.aggregateResult(this.defaultResult(), child.accept(this)));
 		}
-
+		
+		// Inicia o visit por todo os nós que representa o tipo Function
 		for (int i = 0; i < ctx.fun().size(); i++) {
 			ParseTree child = ctx.fun(i);
 			program.addFunctions((Function) this.aggregateResult(this.defaultResult(), child.accept(this)));
@@ -91,7 +104,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 		}
 		param.setIDs(ids);
 		param.setTypes(types);
-		
+
 		return param;
 
 	}
@@ -126,7 +139,6 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 	@Override
 	public Node visitFloatType(FloatTypeContext ctx) {
-		
 
 		return new FloatType(ctx.start.getLine(), ctx.start.getCharPositionInLine());
 	}
@@ -164,8 +176,6 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 	@Override
 	public Node visitIfCommand(IfCommandContext ctx) {
-
-	
 
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
@@ -222,11 +232,11 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 	@Override
 	public Node visitReturnCommand(LangParser.ReturnCommandContext ctx) {
-		
+
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
 		Exp exp = (Exp) ctx.exp().accept(this);
-	
+
 		return new ReturnCommand(l, c, exp);
 	}
 
@@ -250,7 +260,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 		int c = ctx.start.getCharPositionInLine();
 		Exp exp = (Exp) ctx.exp().accept(this);
 		LValue lvalue = (LValue) ctx.lvalue().accept(this);
-		
+
 		return new AssignCommand(l, c, exp, lvalue);
 	}
 
@@ -323,12 +333,11 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 	public Node visitLesserThanExp(LangParser.LesserThanExpContext ctx) {
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
-		
 
 		Exp left = (Exp) ctx.getChild(0).accept(this);
 		Exp right = (Exp) ctx.getChild(2).accept(this);
 		// Imprimindo os operandos para depuração
-		
+
 		return new LesserThanExp(l, c, left, right);
 	}
 
@@ -349,12 +358,11 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 	@Override
 	public Node visitMinusExp(LangParser.MinusExpContext ctx) {
-		
+
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
 		Exp left = (Exp) ctx.getChild(0).accept(this);
 		Exp right = (Exp) ctx.getChild(2).accept(this);
-		
 
 		return new MinusExp(l, c, left, right);
 	}
@@ -435,8 +443,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 	@Override
 	public Node visitIntVal(LangParser.IntValContext ctx) {
-		 
-		    
+
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
 		int value = Integer.parseInt(ctx.getChild(0).getText());
@@ -467,8 +474,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 	@Override
 	public Node visitParenExp(LangParser.ParenExpContext ctx) {
-		
-		
+
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
 		Exp exp = (Exp) ctx.getChild(1).accept(this);
@@ -513,10 +519,8 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 		String str = ctx.ID().getText();
 		FunCallParams fCallPar = (FunCallParams) ctx.exps().accept(this);
-		
 
 		Exp exp = (Exp) ctx.exp().accept(this);
-		
 
 		return new FuncReturnExp(l, c, str, fCallPar, exp);
 	}
@@ -537,11 +541,11 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
-	
+
 		LValue lvalue = (LValue) ctx.lvalue().accept(this);
 		String id = ctx.getChild(2).getText();
 		String dataName = ctx.lvalue().getText();
-		return new DotLValue(l, c, lvalue, id,dataName);
+		return new DotLValue(l, c, lvalue, id, dataName);
 
 	}
 
@@ -551,7 +555,6 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
 		String id = ctx.ID().getText();
-		
 
 		return new IDLValue(l, c, id);
 	}

@@ -54,17 +54,14 @@ public class LangCompiler {
 			}
 			System.out.println(args[1]);
 			SuperNode result = langParser.parseFile(args[1]);
-			 if (result == null) {
-	                System.err.println("Aborting due to syntax error(s)");
-	                System.exit(1);
+			if (result == null) {
 				System.err.println("Aborting due to syntax error(s)");
 				System.exit(1);
+				
 			} else if (args[0].equals("-i")) {
 				// iv = new InterpreterVisitor();
 				LangVisitorInterpreter langInterpreter = new LangVisitorInterpreter();
-				System.out.println("Node");
-				System.out.println(result);
-
+				
 				((Node) result).accept(langInterpreter);
 				// result.accept(iv);
 				// ((InterpreterVisitor)iv).printEnv();
@@ -79,10 +76,10 @@ public class LangCompiler {
 				// result.accept(iv);
 				// ((PPrint)iv).print();
 			}
-		}catch(
+		} catch (
 
-	Exception e)
-	{
-		e.printStackTrace();
+		Exception e) {
+			e.printStackTrace();
+		}
 	}
-}}
+}

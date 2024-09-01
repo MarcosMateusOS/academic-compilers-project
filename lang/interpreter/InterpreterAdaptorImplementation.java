@@ -23,7 +23,7 @@ public class InterpreterAdaptorImplementation implements InterpreterAdaptor {
 			LangParser parser = new LangParser(tokens);
 			// tell ANTLR to does not automatically build an Alex.removeErrorListeners();
 			
-			/*TODO CRIAR UMA CLASSE PARA LANÇAR A EXCEPTION*/
+		
 			lex.addErrorListener(new BaseErrorListener() {
 				@Override
 				public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,

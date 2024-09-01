@@ -61,12 +61,13 @@ import lang.ast.Type;
 import lang.ast.TypeObject;
 
 public class LangVisitorInterpreter extends Visitor {
-	private HashMap<String, Data> datas; // Estrutura de dados para armazenar os tipos
-	private HashMap<String, Function> functions;
-	private Stack<HashMap<String, Object>> env;// Pilha de memoria
-	private Stack<Object> operands;
-	private Stack<Object> params;
-	private boolean modeDebug, retMode;
+	private HashMap<String, Data> datas; // HashMap para armazenar toda as datas do programa
+	private HashMap<String, Function> functions;// HashMap para armazenar toda as funções
+	private Stack<HashMap<String, Object>> env;// Pilha que representa o escopo, armazena nomes de variáveis e seus valores atuais.
+	private Stack<Object> operands; //Pilha usada para avaliar expressões e armazenar resultados intermediários
+	private Stack<Object> params; // Pilha para gerenciar parâmetros de chamadas de função.
+	private boolean modeDebug, retMode; //modeDebug: flag para gerir detalhes para debug - retMode: flag para gerenciar saídas de função
+
 
 	public LangVisitorInterpreter() {
 		/* Construtor inicializando o interpretador */
@@ -76,7 +77,7 @@ public class LangVisitorInterpreter extends Visitor {
 		env.push(new HashMap<String, Object>());
 		operands = new Stack<Object>();
 		params = new Stack<Object>();
-		modeDebug = true;
+		modeDebug = false;
 		retMode = false;
 
 	}//
@@ -86,7 +87,7 @@ public class LangVisitorInterpreter extends Visitor {
 
 		Node main = null;
 		if (this.modeDebug) {
-			System.out.println("-------------- Init Program ----------------");
+			System.out.println("-------------- Program ----------------");
 		}
 		if (p.getDatas() != null) {
 			for (Data data : p.getDatas()) {
@@ -101,7 +102,7 @@ public class LangVisitorInterpreter extends Visitor {
 				if (func.getID().equals("main")) {
 					main = func;
 				}
-				System.out.println(func.toString());
+				
 				functions.put(func.getID(), func);
 			}
 
@@ -136,9 +137,9 @@ public class LangVisitorInterpreter extends Visitor {
 				System.out.println(it.toString());
 			}
 			if (params.size() != 0) {
-				System.out.println("-------------- PARAMS ----------------");
+				//System.out.println("-------------- PARAMS ----------------");
 				operands.push(params.pop());
-				System.out.println("STACK OPERANDS: " + operands);
+				//System.out.println("STACK OPERANDS: " + operands);
 			} else {
 				operands.push(it);
 			}
@@ -207,9 +208,9 @@ public class LangVisitorInterpreter extends Visitor {
 			// Se a função tiver parâmetros
 			if (f.getParams() != null) {
 				Params funcParams = f.getParams();
-				System.out.println(funcParams);
+				
 				List<String> paramsIds = funcParams.getIDs();
-				System.out.println(paramsIds.size());
+				
 
 				// Processa os parâmetros e empilha seus valores
 				funcParams.accept(this);
@@ -220,7 +221,7 @@ public class LangVisitorInterpreter extends Visitor {
 				}
 			}
 
-			// Empurra o ambiente local para a pilha
+			//Insere o ambiente local na pilha de ambientes
 			env.push(localEnv);
 
 			// Executa cada comando no corpo da função
@@ -233,14 +234,8 @@ public class LangVisitorInterpreter extends Visitor {
 			// Remove o ambiente local após a execução
 			env.pop();
 			retMode = false;
-			if (this.modeDebug) {
-				System.out.println("Function executed successfully: " + f.getID());
-
-			}
+			
 		} catch (Exception x) {
-			if (this.modeDebug) {
-				System.out.println("Error in Function: " + f.getID());
-			}
 			this.throwRuntimeException(f, x.getMessage());
 		}
 	}
@@ -287,7 +282,7 @@ public class LangVisitorInterpreter extends Visitor {
 				System.out.println(at.toString());
 			}
 			if (params.size() != 0) {
-				System.out.println(params.toString());
+				// System.out.println(params.toString());
 				operands.push(params.pop());
 			} else {
 				operands.push(at);
@@ -415,21 +410,17 @@ public class LangVisitorInterpreter extends Visitor {
 			Exp condition = iteratec.getExp();
 			condition.accept(this);
 
-			Object obj = operands.pop(); // Desempilha a condição (deve ser booleano ou equivalente)
+			Object obj = operands.pop(); // Desempilha a condição 
 
 			// Executa o loop enquanto a condição for verdadeira
 
 			if (obj instanceof Boolean) {
-				while ((Boolean) obj) { // Ou use o tipo que representa booleano na sua linguagem
+				while ((Boolean) obj) { // ou o tipo for booleano
 					iteratec.getCommand().accept(this);
 
-					// Reavalia a condição após a execução do comando do loop
+					// verifica a condição novamente
 					condition.accept(this);
-					obj = operands.pop(); // Atualiza o valor de 'obj' com a nova condição
-
-					if (this.modeDebug) {
-						System.out.println("Iterate condition re-evaluated: " + obj);
-					}
+					obj = operands.pop(); // atualiza o valor de obj para a nova condição
 				}
 			}
 
@@ -482,8 +473,6 @@ public class LangVisitorInterpreter extends Visitor {
 				System.out.println("-------------- Init ReadCommand ----------------");
 				System.out.println(printc.toString());
 			}
-			System.out.println("-------------- PrintCommand ----------------");
-			System.out.println(printc.toString());
 			printc.getExp().accept(this);
 			Object obj = operands.pop();
 			System.out.print(obj);
@@ -542,12 +531,12 @@ public class LangVisitorInterpreter extends Visitor {
 				System.out.println(assignc.toString());
 			}
 
-			// Avalia a expressão do lado direito da atribuição
+			// avalia a expressão do lado direito da atribuição
 			assignc.getLExp().accept(this);
 
-			LValue lvalue = assignc.getLValue(); // Obtém o lado esquerdo da atribuição
+			LValue lvalue = assignc.getLValue(); // lado esquerdo da atribuição
 
-			// Tratamento de atribuição para identificadores simples
+			//Atribuição para variáveis simples
 			if (lvalue instanceof IDLValue) {
 				Object value = operands.pop();
 
@@ -561,34 +550,31 @@ public class LangVisitorInterpreter extends Visitor {
 				env.peek().put(((IDLValue) lvalue).getID(), value);
 			}
 
-//	        // Tratamento de atribuição para acessos a propriedades de objetos dinâmicos
+      //atribuição para acessos a propriedades de objetos
 			else if (lvalue instanceof DotLValue) {
 				DotLValue dotLValue = (DotLValue) lvalue;
 				LValue innerLValue = dotLValue.getLValue();
 				String propertyId = dotLValue.getID();
 				String dataName = dotLValue.getData();
 
-				// Trata acessos a arrays dentro de objetos
+				// tratamento de atribuições para arrays de objetos
 				if (innerLValue instanceof ArrayAccess) {
 					ArrayAccess arrayAccess = (ArrayAccess) innerLValue;
-					arrayAccess.getExp().accept(this); // Avalia a expressão de índice do array
+					arrayAccess.getExp().accept(this); // avalia a expressão de índice do array
 					int index = (Integer) operands.pop(); // Recupera o índice
-					Object value = operands.pop();
-					List<Object> array = (List<Object>) env.peek().get(arrayAccess.getID());
+					Object value = operands.pop(); // Recupera o valor a ser atribuído do stask de operandos
+					List<Object> array = (List<Object>) env.peek().get(arrayAccess.getID());// Recupera o array
 					if (index < 0 || index >= array.size()) {
 						throw new RuntimeException("Acesso a uma posição inválida no array: " + arrayAccess.getID());
 					}
-
-					// Assume que o valor a ser atribuído já está no topo da pilha de operandos
-					array.set(index, value); // Atualiza o array na posição especificada
+					array.set(index, value); // atualiza o valor na posição do array
 				} else {
-					
-					Object value = operands.pop();
+					// tratamento de atribuições para objetos
+					Object value = operands.pop();// Recupera o valor a ser atribuído do stask de operandos
 
 					HashMap<String, Object> object = (HashMap<String, Object>) env.peek().get(dataName);
 					TypeObject objVar = (TypeObject) object.get(innerLValue.getID());
 					
-
 					if (objVar != null) {
 						if(objVar.getType().getClass() != value.getClass()) {
 							throw new RuntimeException("Atribuição inválida tipo diferente: " + lvalue.getID());
@@ -617,8 +603,7 @@ public class LangVisitorInterpreter extends Visitor {
 				array.set(index, value); // Atualiza o array na posição especificada
 			}
 		} catch (Exception x) {
-			throw new RuntimeException("Erro em AssignCommand: " + assignc.getLine() + ", " + assignc.getColumn()
-					+ " - " + x.getMessage());
+			this.throwRuntimeException(assignc, x.getMessage());
 		}
 
 	}
@@ -646,6 +631,7 @@ public class LangVisitorInterpreter extends Visitor {
 				int expectedParams = funct.getParams().getIDs().size();
 				int providedParams = paramsFcall.getExps().size();
 
+        //Tratamento de exceção para número de parâmetros inválidos
 				if (expectedParams != providedParams)
 					throw new RuntimeException("Número de argumentos fornecidos (" + providedParams
 							+ ") não corresponde ao número de parâmetros esperados (" + expectedParams
@@ -663,9 +649,8 @@ public class LangVisitorInterpreter extends Visitor {
 			List<LValue> lvalues = fc.getLvalues();
 
 			if (lvalues != null) {
-				// Inversão da ordem para associar corretamente os valores retornados às
-				// variáveis
-
+				// Verifica se a função tem valores de retorno
+        // Inverte a ordem dos valores de retorno para atribuir corretamente
 				for (int i = lvalues.size() - 1; i >= 0; i--) {
 					LValue l = lvalues.get(i);
 
@@ -709,8 +694,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(this.compareValues(left, right, "<"));
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + lesseThan.getLine() + ", " + lesseThan.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(lesseThan, x.getMessage());
 		}
 
 	}
@@ -731,8 +715,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(this.compareValues(left, right, "=="));
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + equalityExp.getLine() + ", " + equalityExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(equalityExp, x.getMessage());
 		}
 
 	}
@@ -748,8 +731,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(this.compareValues(left, right, "!="));
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + notEqualExp.getLine() + ", " + notEqualExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(notEqualExp, x.getMessage());
 		}
 
 	}
@@ -772,8 +754,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(result);
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					"Error in PlusExp at (" + plusExp.getLine() + ", " + plusExp.getColumn() + "): " + x.getMessage());
+			this.throwRuntimeException(plusExp, x.getMessage());
 		}
 	}
 
@@ -781,17 +762,16 @@ public class LangVisitorInterpreter extends Visitor {
 	public void visit(MinusExp minusExp) {
 		try {
 			minusExp.getLeft().accept(this);
-			Object left = operands.pop(); // Captura o resultado da avaliação do lado esquerdo
+			Object left = operands.pop(); 
 
 			minusExp.getRight().accept(this);
-			Object right = operands.pop(); // Captura o resultado da avaliação do lado direito
+			Object right = operands.pop(); 
 
-			// Realiza a operação de subtração e empilha o resultado
+			
 			operands.push(this.mathOperations(left, right, '-'));
 
 		} catch (Exception x) {
-			throw new RuntimeException("Error in MinusExp at (" + minusExp.getLine() + ", " + minusExp.getColumn()
-					+ "): " + x.getMessage());
+			this.throwRuntimeException(minusExp, x.getMessage());
 		}
 	}
 
@@ -808,7 +788,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(this.mathOperations(left, right, '*'));
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + multExp.getLine() + ", " + multExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(multExp, x.getMessage());
 		}
 
 	}
@@ -825,7 +805,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(this.mathOperations(left, right, '/'));
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + divExp.getLine() + ", " + divExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(divExp, x.getMessage());
 		}
 
 	}
@@ -842,7 +822,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(this.mathOperations(left, right, '%'));
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + modExp.getLine() + ", " + modExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(modExp, x.getMessage());
 		}
 
 	}
@@ -857,8 +837,7 @@ public class LangVisitorInterpreter extends Visitor {
 						+ ")- Operação inválidada pra o tipo logico '!'");
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + notSignExp.getLine() + ", " + notSignExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(notSignExp, x.getMessage());
 		}
 
 	}
@@ -879,8 +858,7 @@ public class LangVisitorInterpreter extends Visitor {
 				operands.push((Float) value - 1);
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + minusSignExp.getLine() + ", " + minusSignExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(minusSignExp, x.getMessage());
 		}
 	}
 
@@ -891,7 +869,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(true);
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + t.getLine() + ", " + t.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(t, x.getMessage());
 		}
 	}
 
@@ -902,7 +880,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(false);
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + f.getLine() + ", " + f.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(f, x.getMessage());
 		}
 
 	}
@@ -914,7 +892,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(null);
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + n.getLine() + ", " + n.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(n, x.getMessage());
 		}
 
 	}
@@ -925,7 +903,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(intval.getValue());
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + intval.getLine() + ", " + intval.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(intval, x.getMessage());
 		}
 
 	}
@@ -937,7 +915,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(floatVal.getValue());
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + floatVal.getLine() + ", " + floatVal.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(floatVal, x.getMessage());
 		}
 
 	}
@@ -949,7 +927,7 @@ public class LangVisitorInterpreter extends Visitor {
 			operands.push(charval.getValue());
 
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + charval.getLine() + ", " + charval.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(charval, x.getMessage());
 		}
 	}
 
@@ -977,9 +955,7 @@ public class LangVisitorInterpreter extends Visitor {
 					newexp.getType().accept(this); // Processa o tipo
 					newexp.getExp().accept(this); // Processa a expressão que determina o tamanho do array
 
-					if (type instanceof NameType) {
-
-					}
+	
 
 					// Pega o tamanho do array de tipos
 					Integer size = (Integer) operands.pop();
@@ -996,12 +972,12 @@ public class LangVisitorInterpreter extends Visitor {
 				} else {
 					String dataName = newexp.getDataName();
 
-					System.out.println(dataName);
+				
 
 					HashMap<String, Object> vars = new HashMap<String, Object>();
 
 					for (DataDeclaration dataDeclaration : datas.get(dataName).getDeclarations()) {
-						System.out.println(dataDeclaration.toString());
+						
 						dataDeclaration.getType().accept(this);
 						dataDeclaration.toString();
 						operands.pop();
@@ -1038,7 +1014,7 @@ public class LangVisitorInterpreter extends Visitor {
 				}
 			}
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + newexp.getLine() + ", " + newexp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(newexp, x.getMessage());
 		}
 	}
 
@@ -1047,7 +1023,7 @@ public class LangVisitorInterpreter extends Visitor {
 
 		for (DataDeclaration d : datas.get(dataID).getDeclarations()) {
 			d.getType().accept(this); // Processa o tipo da declaração
-			operands.pop(); // Descartando o tipo da pilha
+			operands.pop(); // descarta tipo da pilha
 
 			// Cria um objeto padrão para cada campo no Data
 			Object valorPadrao = new TypeObject(line, column, d.getType(), d.getId());
@@ -1092,15 +1068,14 @@ public class LangVisitorInterpreter extends Visitor {
 				throw new RuntimeException("Erro => Índice fora dos limites do array " + arrayAccess.getID());
 			}
 
-			// Obtém o valor do array no índice especificado
+			// busca o valor do array no índice especificado
 			Object value = ((List<?>) array).get(idx);
 
-			// Empilha o valor para uso posterior
+			// Empilha o valor
 			operands.push(value);
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + arrayAccess.getLine() + ", " + arrayAccess.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(arrayAccess, x.getMessage());
 		}
 
 	}
@@ -1114,7 +1089,7 @@ public class LangVisitorInterpreter extends Visitor {
 	@Override
 	public void visit(IDLValue idLvalue) {
 		try {
-			// Obtém o valor associado ao ID do LValue no ambiente atual
+			// recupera o valor do identificador no ambiente
 
 			Object r = env.peek().get(idLvalue.getID());
 
@@ -1127,9 +1102,7 @@ public class LangVisitorInterpreter extends Visitor {
 						" (" + idLvalue.getLine() + ", " + idLvalue.getColumn() + ") " + ": Erro no Identifier !!");
 			}
 		} catch (Exception x) {
-			// Lança uma exceção com uma mensagem detalhada
-			throw new RuntimeException(" (" + idLvalue.getLine() + ", " + idLvalue.getColumn() + ") "
-					+ "Erro ao acessar o identificador: " + x.getMessage());
+			this.throwRuntimeException(idLvalue, x.getMessage());
 		}
 
 	}
@@ -1150,15 +1123,15 @@ public class LangVisitorInterpreter extends Visitor {
 			if (obj != null) {
 
 				if (obj instanceof ArrayAccess) {
-					// Assumimos que a DotLValue lida com ArrayAccess se for uma List
-					ArrayAccess arr = (ArrayAccess) dotLvalue.getLValue();
-					arr.getExp().accept(this);
-					Integer index = (Integer) operands.pop();
+					// Tratamento de atribuições para arrays de objetos
+					ArrayAccess arr = (ArrayAccess) dotLvalue.getLValue(); // Recupera o array
+					arr.getExp().accept(this); // Avalia a expressão de índice do array
+					Integer index = (Integer) operands.pop(); // Recupera o índice
 
 					if (index != null && index >= 0 && index < ((List) obj).size()) {
 						HashMap<String, Object> objValue = (HashMap<String, Object>) ((List) obj).get(index);
 						if (objValue.containsKey(dotLvalue.getData())) {
-							operands.push(objValue.get(dotLvalue.getData()));
+							operands.push(objValue.get(dotLvalue.getData())); // Empilha o valor do atributo
 						} else {
 							throw new RuntimeException(
 									"Atributo '" + dotLvalue.getID() + "' não encontrado no objeto no índice " + index);
@@ -1168,13 +1141,14 @@ public class LangVisitorInterpreter extends Visitor {
 					}
 				} else if (obj instanceof HashMap) {
 
-					HashMap<String, Object> map = (HashMap<String, Object>) obj;
+					HashMap<String, Object> map = (HashMap<String, Object>) obj;// Copia o objeto
 
-					if (map.containsKey(dotLvalue.getID())) {
+					if (map.containsKey(dotLvalue.getID())) { // Verifica se o atributo existe no objeto
 
-						Object value = map.get(dotLvalue.getID());
+						Object value = map.get(dotLvalue.getID()); // Recupera o valor do atributo
 
 						if (value instanceof TypeObject) {
+              // Verifica se o atributo é um objeto e se == null
 							TypeObject checkTypeObjectContent = (TypeObject) ((TypeObject) value).getContent();
 
 							if (checkTypeObjectContent == null)
@@ -1187,16 +1161,14 @@ public class LangVisitorInterpreter extends Visitor {
 								"Atributo '" + dotLvalue.getID() + "' não encontrado no objeto " + dotLvalue.getID());
 					}
 				} else {
-
+          // Empilha o valor do objeto
 					operands.push(obj);
 				}
 			} else {
 				throw new RuntimeException("Objeto '" + dotLvalue.getID() + "' não encontrado no ambiente.");
 			}
 		} catch (Exception x) {
-			throw new RuntimeException(
-					"Erro em DotLValue: (" + dotLvalue.getLine() + ", " + dotLvalue.getColumn() + ") " + x.getMessage(),
-					x);
+			this.throwRuntimeException(dotLvalue, x.getMessage());
 		}
 	}
 
@@ -1208,7 +1180,7 @@ public class LangVisitorInterpreter extends Visitor {
 				exp.accept(this);
 			}
 		} catch (Exception x) {
-			throw new RuntimeException(" (" + fcp.getLine() + ", " + fcp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(fcp, x.getMessage());
 		}
 
 	}
@@ -1224,7 +1196,7 @@ public class LangVisitorInterpreter extends Visitor {
 				throw new RuntimeException("Função " + functionID + " não encontrada.");
 			}
 
-			// Prevenção de recursão infinita
+			// Verifica se a função está sendo chamada recursivamente
 			if (params.contains(func)) {
 				throw new RuntimeException("Recursão infinita detectada na função: " + functionID);
 			}
@@ -1243,18 +1215,15 @@ public class LangVisitorInterpreter extends Visitor {
 				}
 			}
 
-			// Executa a função e captura os valores de retorno
+			// Executa a função
 			func.accept(this);
-			// Remove a marcação da execução da função após a conclusão
+			
 
-			// Pega o valor da posição que identifica qual variável o usuário quer que seja
-			// retornada
+			IntVal returnIndex = (IntVal) funReturnExp.getExp(); // Recupera o índice de retorno
+			int returnIdxValue = returnIndex.getValue(); // Recupera o valor do índice de retorno
 
-			IntVal returnIndex = (IntVal) funReturnExp.getExp();
-			int returnIdxValue = returnIndex.getValue();
-
-			List<Type> functionReturnTypes = func.returnReturnTypes();
-			if (functionReturnTypes.size() == 0) {
+			List<Type> functionReturnTypes = func.returnReturnTypes(); // Recupera os tipos de retorno da função
+			if (functionReturnTypes.size() == 0) { // Verifica se a função não tem tipos de retorno
 				throw new RuntimeException(" (" + funReturnExp.getLine() + ", " + funReturnExp.getColumn()
 						+ ") A função não apresenta tipos de retorno");
 			}
@@ -1264,20 +1233,18 @@ public class LangVisitorInterpreter extends Visitor {
 				throw new RuntimeException("Posição inválida do retorno: " + returnIdxValue);
 			}
 
-			// Desempilha os valores de retorno e mantém apenas o solicitado
 
 			if (functionReturnTypes.size() > 1) { // Verifica se há múltiplos valores de retorno
 
 				for (int i = functionReturnTypes.size() - 1; i >= 0; i--) {
 					Object returnValue = operands.pop();
 					if (i == returnIdxValue) {
-						operands.push(returnValue);
+						operands.push(returnValue); // Empilha o valor de retorno
 					}
 				}
 			} else if (functionReturnTypes.size() == 1) { // Quando tiver somente 1 retorno
 				if (returnIdxValue == 0) {
-
-					// Não faz nada, o valor de retorno já está no operands
+         // O valor está no topo da pilha de operandos por isso não é necessário fazer nada
 				} else {
 					throw new RuntimeException(" (" + funReturnExp.getLine() + ", " + funReturnExp.getColumn()
 							+ ") Acesso a posição inválida de elemento no retorno da função");
@@ -1285,11 +1252,11 @@ public class LangVisitorInterpreter extends Visitor {
 			}
 
 		} catch (Exception x) {
-			throw new RuntimeException(
-					" (" + funReturnExp.getLine() + ", " + funReturnExp.getColumn() + ") " + x.getMessage());
+			this.throwRuntimeException(funReturnExp, x.getMessage());
 		}
 	}
 
+  // Método para realizar operações matemáticas
 	private Number mathOperations(Object left, Object right, char operation) {
 		try {
 
@@ -1336,6 +1303,7 @@ public class LangVisitorInterpreter extends Visitor {
 		}
 	}
 
+  // Método para comparar valores
 	private boolean compareValues(Object left, Object right, String comparison) {
 		try {
 

@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra :<assoc=left> exp AND_SIGN rexp                #AndExp
 public class AndExp extends BinOp {
 
 	public AndExp(int line, int col, Exp left, Exp right) {
