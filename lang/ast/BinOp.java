@@ -1,12 +1,11 @@
 package lang.ast;
 
 
-
+// Classe abstrata para operações binárias, i.e., do tipo "left (operador) right";
 public abstract class BinOp extends Exp{
 	
 	protected Exp left;
 	protected Exp right;
-	
 	
     public BinOp(int line, int col, Exp left, Exp right) {
         super(line, col);

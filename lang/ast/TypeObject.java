@@ -2,12 +2,11 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+// Classe auxiliar para representar os objetos dos tipos (Data);
 public class TypeObject extends LValue {
 	private Type type;
 	private Object content;
 	private String ID;
-
-	
 	
 	public TypeObject(int line, int col,  Type type, String id) {
 		super(line, col);

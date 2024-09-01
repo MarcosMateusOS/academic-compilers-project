@@ -5,6 +5,7 @@ import java.util.List;
 
 import lang.interpreter.Visitor;
 
+//Classe abstrata para parâmetros:
 public class Params extends Node {
 
 	// fun: ID OPEN_PARENT params? CLOSE_PARENT (COLON type (COMMA type)*)?

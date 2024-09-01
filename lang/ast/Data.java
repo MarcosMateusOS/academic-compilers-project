@@ -4,9 +4,7 @@ package lang.ast;
 import java.util.List;
 import lang.interpreter.Visitor;
 
-
-
-
+// Classe abstrata para as Data, que funcionam como interface.
 public class Data extends Node {
     private String nameType;
     private List<DataDeclaration> declarations;

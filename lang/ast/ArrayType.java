@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | type OPEN_BRACKET CLOSE_BRACKET #ArrayType;
 public class ArrayType extends Type{
 	
 	public Type type;

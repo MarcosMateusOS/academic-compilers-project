@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: lvalue OPEN_BRACKET exp CLOSE_BRACKET #ArrayAccess
 public class ArrayAccess extends LValue{
 	private LValue lvalue;
 	private Exp exp;

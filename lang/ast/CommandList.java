@@ -5,7 +5,7 @@ import java.util.List;
 
 import lang.interpreter.Visitor;
 
-//OPEN_BRACE cmd* CLOSE_BRACE #CommandList
+//Regra: OPEN_BRACE cmd* CLOSE_BRACE #CommandList
 public class CommandList extends Command{
 	
 	private List<Command> commands;

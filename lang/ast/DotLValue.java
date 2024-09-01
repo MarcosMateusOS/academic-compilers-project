@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | lvalue DOT ID #DotLValue
 public class DotLValue extends LValue {
 	
 	private LValue lvalue;

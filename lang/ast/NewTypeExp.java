@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | NEW type (OPEN_BRACKET exp CLOSE_BRACKET)? #NewTypeExp
 public class NewTypeExp extends Exp {
 	private Exp exp;
 	private Type type;

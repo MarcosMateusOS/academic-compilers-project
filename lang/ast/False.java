@@ -2,8 +2,8 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | FALSE                            #False
 public class False extends Exp {
-
 
 	public False(int line, int col) {
 		super(line, col);

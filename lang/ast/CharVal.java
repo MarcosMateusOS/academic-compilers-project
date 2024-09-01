@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | CHAR_VAL                         #CharVal
 public class CharVal extends Exp {
 
     private char value;

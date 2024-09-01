@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: |<assoc=left> OPEN_PARENT exp CLOSE_PARENT     #ParenExp
 public class ParenExp extends Exp {
 	private Exp exp;
 

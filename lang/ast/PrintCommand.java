@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | PRINT exp SEMICOLON #PrintCommand
 public class PrintCommand extends Command {
     private Exp exp;
 

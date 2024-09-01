@@ -1,8 +1,8 @@
 package lang.ast;
 
-
 import lang.interpreter.Visitor;
 
+//Regra: | ID OPEN_PARENT exps? CLOSE_PARENT OPEN_BRACKET exp CLOSE_BRACKET #FuncReturnExp
 public class FuncReturnExp extends Exp {
 	private String id;
 	private FunCallParams funCallParams;

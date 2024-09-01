@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | CHAR_TYPE #CharType
 public class CharType extends Type{
     public CharType(int line, int col) {
         super(line, col);
@@ -9,7 +10,7 @@ public class CharType extends Type{
 
     @Override
     public String toString() {
-        return "Int";
+        return "Char";
     }
 
     @Override

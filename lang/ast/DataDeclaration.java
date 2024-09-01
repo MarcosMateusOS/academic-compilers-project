@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra : ID DOUBLE_COLON type SEMICOLON #DataDeclaration ;
 public class DataDeclaration extends Node {
   String id;
   Type type;

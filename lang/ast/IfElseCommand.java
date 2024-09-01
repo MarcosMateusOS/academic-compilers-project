@@ -2,7 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
-//IF OPEN_PARENT exp CLOSE_PARENT cmd ELSE cmd
+//Regra: IF OPEN_PARENT exp CLOSE_PARENT cmd ELSE cmd
 
 public class IfElseCommand extends Command {
 	private Command cmd;

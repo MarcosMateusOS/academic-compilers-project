@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | NULL                             #Null
 public class Null extends Exp {
 
 

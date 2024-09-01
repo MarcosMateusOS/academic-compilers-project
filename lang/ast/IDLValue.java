@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra : ID #IDLValue
 public class IDLValue extends LValue {
 	
 	private String id;

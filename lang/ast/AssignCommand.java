@@ -5,12 +5,11 @@ import java.util.List;
 
 import lang.interpreter.Visitor;
 
+//Regra: | lvalue EQUAL exp SEMICOLON #AssignCommand
 public class AssignCommand extends Command {
     private Exp exp;
     private LValue lvalue;
 
-
-    
     public AssignCommand(int line, int col, Exp exp, LValue lvalue) {
         super(line, col);
         this.exp = exp;

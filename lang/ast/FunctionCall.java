@@ -3,6 +3,7 @@ package lang.ast;
 import java.util.List;
 import lang.interpreter.Visitor;
 
+//Regra: | ID OPEN_PARENT exps? CLOSE_PARENT (LESSER_THAN lvalue (COMMA lvalue)* GREATER_THAN)? SEMICOLON #FunctionCall
 public class FunctionCall extends Command {
     private String id;
     private FunCallParams funCallParams;

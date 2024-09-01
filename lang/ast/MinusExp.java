@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | aexp MINUS_SIGN mexp             #MinusExp
 public class MinusExp extends BinOp {
 
 	public MinusExp(int line, int col, Exp left, Exp right) {

@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: |<assoc=left> rexp EQUALITY_SIGN aexp          #EqualityExp
 public class EqualityExp extends BinOp {
 
 	public EqualityExp(int line, int col, Exp left, Exp right) {

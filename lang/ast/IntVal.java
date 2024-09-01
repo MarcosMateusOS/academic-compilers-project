@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | INT_VAL                          #IntVal
 public class IntVal extends Exp {
 
 	private int value;

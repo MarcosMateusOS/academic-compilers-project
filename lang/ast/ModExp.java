@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: |<assoc=left> mexp MOD_SIGN sexp               #ModExp
 public class ModExp extends BinOp {
 
 	public ModExp(int line, int col, Exp left, Exp right) {

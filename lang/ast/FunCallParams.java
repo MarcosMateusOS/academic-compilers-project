@@ -4,6 +4,7 @@ import java.util.List;
 
 import lang.interpreter.Visitor;
 
+//Regra : exp (COMMA exp)* #FunCallParams;
 public class FunCallParams extends Exp {
 	private List<Exp> exps;
 

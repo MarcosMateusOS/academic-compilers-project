@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra :<assoc=left> mexp MULT_SIGN sexp              #MultExp
 public class MultExp extends BinOp {
 
 	public MultExp(int line, int col, Exp left, Exp right) {

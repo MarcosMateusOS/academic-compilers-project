@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra : NOT_SIGN sexp                    #NotSignExp
 public class NotSignExp extends Exp {
 	private Exp exp;
 

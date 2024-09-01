@@ -5,6 +5,7 @@ import java.util.List;
 
 import lang.interpreter.Visitor;
 
+//Regra : ID OPEN_PARENT params? CLOSE_PARENT (COLON type (COMMA type)*)? OPEN_BRACE cmd* CLOSE_BRACE #Function;
 public class Function extends Node {
 
 	// fun: ID OPEN_PARENT params? CLOSE_PARENT (COLON type (COMMA type)*)?

@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | NAME_TYPE #NameType
 public class NameType extends Type{
 		
 	private String nameType;

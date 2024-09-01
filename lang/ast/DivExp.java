@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: |<assoc=left> mexp DIVIDE_SIGN sexp            #DivExp
 public class DivExp extends BinOp {
 
 	public DivExp(int line, int col, Exp left, Exp right) {

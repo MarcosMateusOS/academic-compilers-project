@@ -2,9 +2,9 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | RETURN exp SEMICOLON #ReturnCommand
 public class ReturnCommand extends Command {
     private Exp exp;
-
 
     public ReturnCommand(int line, int col, Exp exp) {
         super(line, col);

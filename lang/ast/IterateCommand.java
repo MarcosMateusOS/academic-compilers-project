@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | ITERATE OPEN_PARENT exp CLOSE_PARENT cmd #IterateCommand
 public class IterateCommand extends Command {
     private Exp exp;
     private Command cmd;

@@ -2,6 +2,7 @@ package lang.ast;
 
 import lang.interpreter.Visitor;
 
+//Regra: | MINUS_SIGN sexp                  #MinusSignExp
 public class MinusSignExp extends Exp {
 	private Exp exp;
 

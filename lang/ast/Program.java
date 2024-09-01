@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lang.interpreter.Visitor;
 
+//Regra: data* fun* #Program; 
 public class Program extends Node {
    
     private List<Data> datas;

@@ -5,9 +5,9 @@ import java.util.List;
 
 import lang.interpreter.Visitor;
 
+//Regra: | RETURN exp (COMMA exp)* SEMICOLON  #ReturnMultCommand // Comandos Múltiplos 
 public class ReturnMultCommand extends Command {
     private List<Exp> exps;
-
 
     public ReturnMultCommand(int line, int col, List<Exp> exp) {
         super(line, col);
