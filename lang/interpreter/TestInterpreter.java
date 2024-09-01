@@ -6,7 +6,7 @@ import java.io.*;
 
 public class TestInterpreter {
    private InterpreterAdaptor idp;
-   private String okSrcs = "testes/semantica/certo/";
+   private String okSrcs = "testes/semantica/errado/";
    private File f;
    
    public TestInterpreter(InterpreterAdaptor idp){

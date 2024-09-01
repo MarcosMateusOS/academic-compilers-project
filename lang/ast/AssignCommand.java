@@ -27,4 +27,12 @@ public class AssignCommand extends Command {
     public void accept(Visitor v) {
         v.visit(this);
     }
+    
+    public LValue getLValue() {
+    	return this.lvalue;
+    }
+    
+    public Exp getLExp() {
+    	return this.exp;
+    }
 }

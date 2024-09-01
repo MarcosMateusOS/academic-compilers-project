@@ -6,12 +6,14 @@ public class DotLValue extends LValue {
 	
 	private LValue lvalue;
 	private String id;
+	private String dataName;
 	
 	
-	public DotLValue(int line, int col, LValue lvalue, String id) {
+	public DotLValue(int line, int col, LValue lvalue, String id, String dataName) {
 		super(line, col);
 		this.lvalue = lvalue;
 		this.id = id;
+		this.dataName = dataName;
 	}
 
 	@Override
@@ -27,7 +29,18 @@ public class DotLValue extends LValue {
 
 	@Override
 	public String getID() {
-		return lvalue.getID();
+		return id;
 	}
+	
+	public String getData() {
+		return this.dataName;
+	}
+	
+
+	
+	public LValue getLValue() {
+		return this.lvalue;
+	}
+	
 
 }

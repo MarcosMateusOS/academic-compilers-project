@@ -62,7 +62,6 @@ public class Function extends Node {
 	
 	
 	public void addReturnType(Type type) {
-		System.out.println(type.toString());
 		this.returnTypes.add(type);
 	}
 	
@@ -80,6 +79,14 @@ public class Function extends Node {
 	
 	public List<Command> getCommands() {
 		return this.commands;
+	}
+	
+	public Integer returnSize() {
+		return this.returnTypes.size();
+	}
+	
+	public List<Type> returnReturnTypes() {
+		return this.returnTypes;
 	}
 	
 	

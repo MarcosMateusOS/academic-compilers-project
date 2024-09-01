@@ -10,6 +10,7 @@ public class LesserThanExp extends BinOp {
 
 	@Override
 	public String toString() {
+		
 		return (left.toString() + " < " + right.toString());
 	}
 

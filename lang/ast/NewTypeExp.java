@@ -37,5 +37,19 @@ public class NewTypeExp extends Exp {
 	public void accept(Visitor v) {
 		v.visit(this);
 	}
+	
+	public Type getType() {
+		return this.type;
+	}
+	
+	public Exp getExp() {
+		return this.exp;
+	}
+	
+	
+	public String getDataName() {
+		return this.dataName;
+	}
+
 
 }

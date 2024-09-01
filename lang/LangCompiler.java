@@ -54,7 +54,9 @@ public class LangCompiler {
 			}
 			System.out.println(args[1]);
 			SuperNode result = langParser.parseFile(args[1]);
-			if (result == null) {
+			 if (result == null) {
+	                System.err.println("Aborting due to syntax error(s)");
+	                System.exit(1);
 				System.err.println("Aborting due to syntax error(s)");
 				System.exit(1);
 			} else if (args[0].equals("-i")) {
@@ -77,8 +79,10 @@ public class LangCompiler {
 				// result.accept(iv);
 				// ((PPrint)iv).print();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		}catch(
+
+	Exception e)
+	{
+		e.printStackTrace();
 	}
-}
+}}

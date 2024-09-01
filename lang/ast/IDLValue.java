@@ -25,7 +25,7 @@ public class IDLValue extends LValue {
 
 	@Override
 	public String getID() {
-		return id;
+		return this.id;
 	}
 
 }

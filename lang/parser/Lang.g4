@@ -40,14 +40,14 @@ cmd     : OPEN_BRACE cmd* CLOSE_BRACE #CommandList
 
 /*Modularizando as exp*/
 exp
-    : exp AND_SIGN rexp                #AndExp
+    :<assoc=left> exp AND_SIGN rexp                #AndExp
     | rexp                             #ReExp
     ;
 
 rexp
-    : rexp LESSER_THAN aexp            #LesserThanExp
-    | rexp EQUALITY_SIGN aexp          #EqualityExp
-    | rexp NOT_EQUAL_SIGN aexp         #NotEqualExp
+    : aexp LESSER_THAN aexp            #LesserThanExp
+    |<assoc=left> rexp EQUALITY_SIGN aexp          #EqualityExp
+    |<assoc=left> rexp NOT_EQUAL_SIGN aexp         #NotEqualExp
     | aexp                             #AExp
     ;
 
@@ -58,9 +58,9 @@ aexp
     ;
 
 mexp
-    : mexp MULT_SIGN sexp              #MultExp
-    | mexp DIVIDE_SIGN sexp            #DivExp
-    | mexp MOD_SIGN sexp               #ModExp
+    :<assoc=left> mexp MULT_SIGN sexp              #MultExp
+    |<assoc=left> mexp DIVIDE_SIGN sexp            #DivExp
+    |<assoc=left> mexp MOD_SIGN sexp               #ModExp
     | sexp                             #SExp
     ;
 
@@ -73,7 +73,7 @@ sexp
     | INT_VAL                          #IntVal
     | FLOAT_VAL                        #FloatVal
     | CHAR_VAL                         #CharVal
-    | OPEN_PARENT exp CLOSE_PARENT     #ParenExp
+    |<assoc=left> OPEN_PARENT exp CLOSE_PARENT     #ParenExp
     | NEW type (OPEN_BRACKET exp CLOSE_BRACKET)? #NewTypeExp
     | ID OPEN_PARENT exps? CLOSE_PARENT OPEN_BRACKET exp CLOSE_BRACKET #FuncReturnExp
     | lvalue                           #LValueExp

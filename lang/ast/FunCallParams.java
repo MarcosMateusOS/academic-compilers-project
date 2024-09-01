@@ -18,7 +18,7 @@ public class FunCallParams extends Exp {
 	public String toString() {
 	    String funcCallParamsStr = "";
         for (Exp exp : exps) {
-        	funcCallParamsStr += exp + ", ";
+        	funcCallParamsStr += exp.toString() + ", ";
         }
         if(funcCallParamsStr.length() > 0){
             return funcCallParamsStr.substring(0, funcCallParamsStr.length() - 2);      

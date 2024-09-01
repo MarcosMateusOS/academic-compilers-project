@@ -20,5 +20,9 @@ public class ParenExp extends Exp {
 	public void accept(Visitor v) {
 		v.visit(this);
 	}
+	
+	public Exp getExp() {
+		return this.exp;
+	}
 
 }

@@ -33,39 +33,37 @@ public class ParseAdaptorImplementation implements ParseAdaptor {
 			LangParser parser = new LangParser(tokens);
 			// tell ANTLR to does not automatically build an AST
 
+			
+			lex.removeErrorListeners();
+			lex.addErrorListener(new BaseErrorListener() {
+				@Override
+				public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+						int charPositionInLine, String msg, RecognitionException e) {
+					System.out.println("line " + line + ":" + charPositionInLine + " -- " + msg);
+					throw new RuntimeException(e.getCause());
+				}
+			});
+			
 			ParseTree tree = parser.prog();
 
-			tokens.fill(); // Garante que todos os tokens sejam consumidos
-			for (Token token : tokens.getTokens()) {
-				System.out.println("Token: " + token.getText() + " - Tipo: "
-						+ lex.getVocabulary().getSymbolicName(token.getType()));
-			}
-
-			/*
-			 * if(parser.getNumberOfSyntaxErrors() == 0){ // Create a visitor Visitor v =
-			 * new Visitor(); // Visit the tree return v.visit(tree); }
-			 */
 
 			if (parser.getNumberOfSyntaxErrors() != 0) {
 				return null;
 			}
 
 			LangVisitor ast = new LangVisitor();
-			System.out.println("Tree");
-			System.out.println(tree.toStringTree());
+
 			Node node = ast.visit(tree);
 
-			// Exibir a árvore em um painel de visualização
-			JFrame frame = new JFrame("ANTLR Tree Viewer");
-			JPanel panel = new JPanel();
-			TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-			
-			panel.add(viewer);
-			frame.add(panel);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setSize(1920, 1080);
-			frame.setVisible(true);
-
+			/*
+			 * // Exibir a árvore em um painel de visualização JFrame frame = new
+			 * JFrame("ANTLR Tree Viewer"); JPanel panel = new JPanel(); TreeViewer viewer =
+			 * new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+			 * 
+			 * panel.add(viewer); frame.add(panel);
+			 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); frame.setSize(1920,
+			 * 1080); frame.setVisible(true);
+			 */
 			return node;
 
 		} catch (Exception e) {

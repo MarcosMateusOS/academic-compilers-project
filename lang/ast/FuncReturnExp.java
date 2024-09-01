@@ -6,7 +6,7 @@ import lang.interpreter.Visitor;
 public class FuncReturnExp extends Exp {
 	private String id;
 	private FunCallParams funCallParams;
-	private Exp exp;
+	private Exp exp; // Retorno da função
 
 	public FuncReturnExp(int line, int col, String id, FunCallParams funCallParams, Exp exp) {
 		super(line, col);
@@ -23,6 +23,18 @@ public class FuncReturnExp extends Exp {
 	@Override
 	public void accept(Visitor v) {
 		v.visit(this);
+	}
+	
+	public String getID() {
+		return this.id;
+	}
+	
+	public FunCallParams getFunCallParams() {
+		return this.funCallParams;
+	}
+	
+	public Exp getExp() {
+		return this.exp;
 	}
 
 }

@@ -1,12 +1,15 @@
 package lang.parser;
 
 import java.io.*;
+import lang.ast.SuperNode;
+import lang.parser.*;
+import java.util.List;
 
 // Adaptador para classe de parser. a Função parseFile deve retornar null caso o parser resulte em erro. 
 
 public class TestParser {
    private ParseAdaptor adp;
-   private String okSrcs = "testes/sintaxe/errado/";
+   private String okSrcs = "testes/sintaxe/certo/";
    private File f;
    
    public TestParser(ParseAdaptor adp){
@@ -52,4 +55,3 @@ public class TestParser {
        }
    }
 }
-

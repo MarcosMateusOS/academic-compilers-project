@@ -24,9 +24,13 @@ public class ArrayAccess extends LValue{
 		v.visit(this);
 	}
 
-	@Override
+	
 	public String getID() {
 		return this.lvalue.getID();
+	}
+	
+	public Exp getExp() {
+		return this.exp;
 	}
 
 }

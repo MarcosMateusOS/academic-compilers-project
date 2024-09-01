@@ -47,7 +47,7 @@ gen-ast:
 
 run-test:
 	@echo "Executando o compilador"
-	java -cp $(ANTLR_JAR):. lang.LangCompiler -b
+	java -cp $(ANTLR_JAR):. lang.LangCompiler -bs
 	
 run-test-it:
 	@echo "Executando o compilador"

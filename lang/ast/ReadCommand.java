@@ -22,7 +22,7 @@ public class ReadCommand extends Command {
     }
     
     public LValue getLValue() {
-    	return this.getLValue();
+    	return this.lvalue;
     }
     
 }

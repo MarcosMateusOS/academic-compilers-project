@@ -48,10 +48,10 @@ sort(v :: Ponto[], n :: Int){
              v[j] = aux;
           }
           j = j + 1;
-       }
-       i = i +1; 
-    }
-}
+         }
+         i = i +1; 
+      }
+   }
 
 main(){
    k = 5;

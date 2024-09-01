@@ -22,6 +22,6 @@ public class PrintCommand extends Command {
     }
     
     public Exp getExp() {
-    	return this.getExp();
+    	return this.exp;
     }
 }
