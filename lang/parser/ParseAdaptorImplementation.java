@@ -1,3 +1,9 @@
+/*
+    Grupo: Marcos Mateus Oliveira dos Santos - 201835019
+           Giovane Nilmer de Oliveira Santos - 201835012
+
+*/
+
 package lang.parser;
 
 import lang.parser.*;
@@ -33,7 +39,6 @@ public class ParseAdaptorImplementation implements ParseAdaptor {
 			LangParser parser = new LangParser(tokens);
 			// tell ANTLR to does not automatically build an AST
 
-			
 			lex.removeErrorListeners();
 			lex.addErrorListener(new BaseErrorListener() {
 				@Override
@@ -43,9 +48,8 @@ public class ParseAdaptorImplementation implements ParseAdaptor {
 					throw new RuntimeException(e.getCause());
 				}
 			});
-			
-			ParseTree tree = parser.prog();
 
+			ParseTree tree = parser.prog();
 
 			if (parser.getNumberOfSyntaxErrors() != 0) {
 				return null;
@@ -54,16 +58,29 @@ public class ParseAdaptorImplementation implements ParseAdaptor {
 			LangVisitor ast = new LangVisitor();
 
 			Node node = ast.visit(tree);
+			/*Gerador da imagem da arvore abstrata*/
+//	        JFrame frame = new JFrame("ANTLR Tree Viewer");
+//	        JPanel panel = new JPanel();
+//	        
+//	       
+//	        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+//	        viewer.setScale(1.25); 
+//	        
+//	        
+//	        panel.add(viewer);
+//	        
+//	        
+//	        frame.add(panel);
+//	        
+//	        
+//	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//	        
+//	       
+//	        frame.setSize(1920, 1080);
+//	        
+//	        
+//	        frame.setVisible(true);
 
-			/*
-			 * // Exibir a árvore em um painel de visualização JFrame frame = new
-			 * JFrame("ANTLR Tree Viewer"); JPanel panel = new JPanel(); TreeViewer viewer =
-			 * new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-			 * 
-			 * panel.add(viewer); frame.add(panel);
-			 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); frame.setSize(1920,
-			 * 1080); frame.setVisible(true);
-			 */
 			return node;
 
 		} catch (Exception e) {
