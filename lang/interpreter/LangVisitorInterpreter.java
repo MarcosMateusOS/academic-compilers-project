@@ -1222,7 +1222,7 @@ public class LangVisitorInterpreter extends Visitor {
 			IntVal returnIndex = (IntVal) funReturnExp.getExp(); // Recupera o índice de retorno
 			int returnIdxValue = returnIndex.getValue(); // Recupera o valor do índice de retorno
 
-			List<Type> functionReturnTypes = func.returnReturnTypes(); // Recupera os tipos de retorno da função
+			List<Type> functionReturnTypes = func.getReturnTypes(); // Recupera os tipos de retorno da função
 			if (functionReturnTypes.size() == 0) { // Verifica se a função não tem tipos de retorno
 				throw new RuntimeException(" (" + funReturnExp.getLine() + ", " + funReturnExp.getColumn()
 						+ ") A função não apresenta tipos de retorno");

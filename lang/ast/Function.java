@@ -86,7 +86,7 @@ public class Function extends Node {
 		return this.returnTypes.size();
 	}
 	
-	public List<Type> returnReturnTypes() {
+	public List<Type> getReturnTypes() {
 		return this.returnTypes;
 	}
 	

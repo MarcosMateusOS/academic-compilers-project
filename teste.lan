@@ -1,10 +1,18 @@
 data Ponto {
    x :: Float;
    y :: Float;
+   y :: Float;
 }
+
+data Ponto {
+   x :: Float;
+   y :: Float;
+   y :: Float;
+}
+
 
 main(){
     x = new Ponto;
-    x.x = 1;
+    x.z = 1;
    print x.x;
 }

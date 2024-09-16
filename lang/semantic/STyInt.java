@@ -2,15 +2,22 @@ package lang.semantic;
 
 public class STyInt extends SType {
 
-	private static TyInt ti = new TyInt();
+	private static STyInt sti = new STyInt();
 
 	private STyInt() {
 	}
+
+	public static STyInt newSTyInt() {
+		return sti;
+	}
 	
-	public static TyInt
+	@Override
+    public String toString() {
+        return "Int";
+    }
 
 	@Override
 	public boolean match(SType st) {
-		return (st instanceof TyInt) || (st instanceof TyErr);
+		return (st instanceof STyInt) || (st instanceof STyErr);
 	}
 }

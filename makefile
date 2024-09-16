@@ -3,6 +3,7 @@ ANTLR_JAR = ./lib/antlr-4.8-complete.jar
 SRC_DIR = ./lang
 PARSER_DIR = $(SRC_DIR)/parser
 INTERPRETER_DIR = $(SRC_DIR)/interpreter
+SEMANTIC_DIR = $(SRC_DIR)/semantic
 AST_DIR = $(SRC_DIR)/ast
 MAIN_CLASS = $(SRC_DIR)/LangCompiler.java
 
@@ -10,7 +11,7 @@ MAIN_CLASS = $(SRC_DIR)/LangCompiler.java
 ANTLR_CMD = java -jar $(ANTLR_JAR)
 
 # Regras principais
-all: clean-cache gen-parser-antlr gen-ast gen-parser gen-interpreter compile
+all: clean-cache gen-parser-antlr gen-ast gen-parser  gen-interpreter gen-semantic compile
 
 compile: 
 	@echo "Compilando o projeto"
@@ -23,6 +24,10 @@ gen-parser-antlr: $(PARSER_DIR)/Lang.g4
 gen-parser: 
 	@echo "Compilando Parser"
 	javac -cp $(ANTLR_JAR):. $(PARSER_DIR)/*.java
+
+gen-semantic: 
+	@echo "Compilando Semantic"
+	javac -cp $(ANTLR_JAR):. $(SEMANTIC_DIR)/*.java
 
 gen-interpreter: 
 	@echo "Compilando Interpreter"
@@ -56,5 +61,10 @@ run-test-it:
 run:
 	@echo "Executando o compilador com os argumentos fornecidos"
 	java -cp $(ANTLR_JAR):. lang.LangCompiler $(action) $(path)
+	
+run-tp:
+	@echo "Executando o compilador com os argumentos fornecidos"
+	java -cp $(ANTLR_JAR):. lang.LangCompiler -tp teste.lan
+	
 	
 .PHONY: all compile gen-parser clean-cache gen-ast run

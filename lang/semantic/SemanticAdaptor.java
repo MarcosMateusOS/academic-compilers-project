@@ -4,12 +4,12 @@
 
 */
 
-package lang.interpreter;
+package lang.semantic;
 
 import lang.ast.SuperNode;
 
 
-public interface InterpreterAdaptor{
+public interface SemanticAdaptor{
    public abstract SuperNode parseFile(String path) ;
    
 }
