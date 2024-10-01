@@ -24,3 +24,5 @@
 /SemanticImplementation$1.class
 /LangVisitorTypeCheck.class
 /DataTypes.class
+/TestInterpreter.class
+/TestSemantic.class

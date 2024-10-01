@@ -1,3 +1,8 @@
+/*
+    Grupo: Marcos Mateus Oliveira dos Santos - 201835019
+           Giovane Nilmer de Oliveira Santos - 201835012
+
+*/
 package lang.semantic;
 
 import java.util.List;
@@ -21,7 +26,7 @@ public class FuncTypes extends SType {
 	}
 
 	public List<SType> getTypes() {
-		return parametersTypes;
+		return this.parametersTypes;
 	}
 
 	public List<SType> getReturnType() {

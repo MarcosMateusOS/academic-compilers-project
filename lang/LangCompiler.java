@@ -1,6 +1,7 @@
 package lang;
 
 import lang.ast.SuperNode;
+import lang.code_gen.*;
 import lang.ast.*;
 import lang.interpreter.InterpreterAdaptorImplementation;
 import lang.interpreter.LangVisitorInterpreter;
@@ -9,6 +10,7 @@ import lang.parser.ParseAdaptorImplementation;
 import lang.parser.TestParser;
 import lang.semantic.LangVisitorTypeCheck;
 import lang.semantic.SemanticImplementation;
+import lang.semantic.TestSemantic;
 
 public class LangCompiler {
 
@@ -36,14 +38,14 @@ public class LangCompiler {
 			ParseAdaptorImplementation langParser = new ParseAdaptorImplementation();
 			InterpreterAdaptorImplementation langInterpreterImp = new InterpreterAdaptorImplementation();
 			SemanticImplementation langSemantic = new SemanticImplementation();
-	
+
 			if (args[0].equals("-bs")) {
 				System.out.println("Executando bateria de testes sintáticos:");
 				TestParser tp = new TestParser(langParser);
 				return;
 			}
 			if (args[0].equals("-byt")) {
-				System.out.println("Executando bateria de testes sintáticos:");
+				TestSemantic ty = new TestSemantic(langSemantic);
 				return;
 			}
 			if (args[0].equals("-bsm")) {
@@ -60,11 +62,11 @@ public class LangCompiler {
 			if (result == null) {
 				System.err.println("Aborting due to syntax error(s)");
 				System.exit(1);
-				
+
 			} else if (args[0].equals("-i")) {
 				// iv = new InterpreterVisitor();
 				LangVisitorInterpreter langInterpreter = new LangVisitorInterpreter();
-				
+
 				((Node) result).accept(langInterpreter);
 				// result.accept(iv);
 				// ((InterpreterVisitor)iv).printEnv();
@@ -72,24 +74,53 @@ public class LangCompiler {
 				// iv = new InteractiveInterpreterVisitor();
 				// result.accept(iv);
 			} else if (args[0].equals("-tp")) {
-				
+
 				LangVisitorTypeCheck langVisitorTypeCheck = new LangVisitorTypeCheck();
 				((Node) result).accept(langVisitorTypeCheck);
-				
+
 				System.out.println("-------------- Iniciando verificação de tipos ----------------");
-				if(langVisitorTypeCheck.getNumErrors() > 0) {
+				if (langVisitorTypeCheck.getNumErrors() > 0) {
 					System.out.println("-------------- Verificação de tipos [ERROR]----------------");
 					langVisitorTypeCheck.printErrors();
-				}else {
+				} else {
 					System.out.println("--------------Verificação de tipos [OK]----------------");
 				}
-				
 
-			
 			} else if (args[0].equals("-pp")) {
-				// iv = new PPrint();
-				// result.accept(iv);
-				// ((PPrint)iv).print();
+				LangVisitorTypeCheck langVisitorTypeCheck = new LangVisitorTypeCheck();
+				((Node) result).accept(langVisitorTypeCheck);
+
+				System.out.println("-------------- Iniciando verificação de tipos ----------------");
+				if (langVisitorTypeCheck.getNumErrors() > 0) {
+					System.out.println("-------------- Verificação de tipos [ERROR]----------------");
+					langVisitorTypeCheck.printErrors();
+				} else {
+					System.out.println("--------------Verificação de tipos [OK]----------------");
+					System.out.println("-------------- Iniciando geração do codigo em Jasmin ----------------");
+					
+					VisitorCodeGenJasmin codeGenJasmin =  new VisitorCodeGenJasmin("JasminGenerated",langVisitorTypeCheck.getEnv());
+					((Node) result).accept(codeGenJasmin);
+
+				}
+				
+				
+			}else if (args[0].equals("-s")) {
+				LangVisitorTypeCheck langVisitorTypeCheck = new LangVisitorTypeCheck();
+				((Node) result).accept(langVisitorTypeCheck);
+
+				System.out.println("-------------- Iniciando verificação de tipos ----------------");
+				if (langVisitorTypeCheck.getNumErrors() > 0) {
+					System.out.println("-------------- Verificação de tipos [ERROR]----------------");
+					langVisitorTypeCheck.printErrors();
+				} else {
+					System.out.println("--------------Verificação de tipos [OK]----------------");
+					System.out.println("-------------- Iniciando geração do codigo em Python ----------------");
+					VisitorCodeGenPython codeGenPython =  new VisitorCodeGenPython("out_put",langVisitorTypeCheck.getEnv());
+					((Node) result).accept(codeGenPython);
+
+				}
+				
+				
 			}
 		} catch (
 

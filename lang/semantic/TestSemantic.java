@@ -4,18 +4,18 @@
 
 */
 
-package lang.interpreter;
+package lang.semantic;
 
 import java.io.*;
 
-// Adaptador para classe de parser. a Função parseFile deve retornar null caso o parser resulte em erro. 
 
-public class TestInterpreter {
-   private InterpreterAdaptor idp;
+
+public class TestSemantic {
+   private SemanticAdaptor idp;
    private String okSrcs = "testes/semantica/certo/";
    private File f;
    
-   public TestInterpreter(InterpreterAdaptor idp){
+   public TestSemantic(SemanticAdaptor idp){
         this.idp = idp;
         f = new File(okSrcs);
         runOkTests();

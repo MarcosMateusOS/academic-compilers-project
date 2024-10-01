@@ -38,7 +38,7 @@ public class ParseAdaptorImplementation implements ParseAdaptor {
 			// create a parser that feeds off the tokens buffer
 			LangParser parser = new LangParser(tokens);
 			// tell ANTLR to does not automatically build an AST
-
+			
 			lex.removeErrorListeners();
 			lex.addErrorListener(new BaseErrorListener() {
 				@Override

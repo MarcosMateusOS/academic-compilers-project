@@ -33,5 +33,10 @@ public class ArrayAccess extends LValue{
 	public Exp getExp() {
 		return this.exp;
 	}
+	
+	public LValue getLValue() {
+		return this.lvalue;
+	}
+
 
 }

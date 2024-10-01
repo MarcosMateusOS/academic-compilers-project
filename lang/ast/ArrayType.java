@@ -21,4 +21,8 @@ public class ArrayType extends Type{
     public void accept(Visitor v) {
         v.visit(this);
     }
+    
+    public Type getType() {
+    	return this.type;
+    }
 }

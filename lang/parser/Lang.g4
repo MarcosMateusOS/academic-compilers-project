@@ -6,7 +6,7 @@ package lang.parser;
 }
 
 /* Regras da gramática */
-prog    : data* fun* #Program ; 
+prog    :(data | fun)* #Program ; 
 
 data    : DATA_TYPE NAME_TYPE OPEN_BRACE decl* CLOSE_BRACE #Datas ;
 
@@ -26,7 +26,7 @@ btype   : INT_TYPE #IntType
         | NAME_TYPE #NameType
         ;
 
-cmd     : OPEN_BRACE cmd* CLOSE_BRACE #CommandList
+cmd     : OPEN_BRACE (cmd)* CLOSE_BRACE #CommandList
         | IF OPEN_PARENT exp CLOSE_PARENT cmd #IfCommand
         | IF OPEN_PARENT exp CLOSE_PARENT cmd ELSE cmd #IfElseCommand
         | ITERATE OPEN_PARENT exp CLOSE_PARENT cmd #IterateCommand
@@ -94,7 +94,7 @@ WS           : [ \t]+ -> skip;            // Espaço em branco
 LINE_COMMENT : '--' .*? EOL -> skip;      // Comentário de linha
 MULTILINE_COMMENT: '{-' .*? '-}' -> skip; // Comentário multilinha
 
-fragment ESC_SEQ: '\\' [btnrf"'\\] ;  // Sequências de escape para caracteres
+
 
 /*Tipos */
 INT_TYPE    : 'Int';
@@ -152,6 +152,14 @@ CLOSE_BRACKET: ']';
 ID          : [a-z][a-zA-Z0-9_]* ;        // Identificadores
 NAME_TYPE   : [A-Z][a-zA-Z0-9_]* ;      // Nomes dos tipos
 INT_VAL     : [0-9]+ ;                   // Valores inteiros
-CHAR_VAL    : '\'' ( ESC_SEQ | ~[\r\n\\'] ) '\'' ; // Valores dos caracteres
+CHAR_VAL    :   ('\''([\u0000-\u0026]|[\u0028-\u005B]|[\u005D-\u007F])'\'')       // (000 - 127)(Menos o 27 => aspas simples ' e nem 97 => Contrabarra \ ) Captura todos os caracteres da tabela ASCII, conforme a especificação da linguagem
+    | ('\'''\\n''\'')           // '\n' => Contrabarra_n
+    | ('\'''\\t''\'')           // '\t' => Contrabarra_t
+    | ('\'''\\b''\'')           // '\b' => Contrabarra_b
+    | ('\'''\\r''\'')           // '\r' => Contrabarra_r
+    | ('\'''\\\\''\'')          // Especifica '\\' que é a '\' => Contrabarra
+    | ('\'\\\'\'')              // Especifica a aspas simples: "\\\'" => \' => '
+    ;
+      
 FLOAT_VAL   : [0-9]+ '.' [0-9]* ;       // Valores dos floats
 

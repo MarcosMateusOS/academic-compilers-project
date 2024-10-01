@@ -23,8 +23,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * AST do programa.
  */
 public class LangVisitor extends LangBaseVisitor<Node> {
-	
-	/*ProgramContext: Visita o nó raiz do Programa*/
+
+	/* ProgramContext: Visita o nó raiz do Programa */
 	@Override
 	public Node visitProgram(ProgramContext ctx) {
 
@@ -35,7 +35,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 			ParseTree child = ctx.data(i);
 			program.addData((Data) this.aggregateResult(this.defaultResult(), child.accept(this)));
 		}
-		
+
 		// Inicia o visit por todo os nós que representa o tipo Function
 		for (int i = 0; i < ctx.fun().size(); i++) {
 			ParseTree child = ctx.fun(i);
@@ -193,7 +193,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 
 		Exp exp = (Exp) ctx.getChild(2).accept(this);
 		Command cmd = (Command) ctx.getChild(4).accept(this);
-		Command cmdElse = (Command) ctx.getChild(4).accept(this);
+		Command cmdElse = (Command) ctx.getChild(6).accept(this);
 
 		return new IfElseCommand(l, c, cmd, cmdElse, exp);
 	}
@@ -462,7 +462,9 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 	public Node visitCharVal(LangParser.CharValContext ctx) {
 		int l = ctx.start.getLine();
 		int c = ctx.start.getCharPositionInLine();
-		char value = ctx.CHAR_VAL().getText().charAt(1);
+		String value = ctx.CHAR_VAL().getText();
+		
+		System.out.println("VALUE" + value);
 		return new CharVal(l, c, value);
 	}
 
@@ -518,7 +520,10 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 		int c = ctx.start.getCharPositionInLine();
 
 		String str = ctx.ID().getText();
-		FunCallParams fCallPar = (FunCallParams) ctx.exps().accept(this);
+		FunCallParams fCallPar = null;
+		if (ctx.exps() != null) { // Adicionado nova verificação para verificar ser o parametro é nulo
+			fCallPar = (FunCallParams) ctx.exps().accept(this);
+		}
 
 		Exp exp = (Exp) ctx.exp().accept(this);
 
@@ -545,6 +550,7 @@ public class LangVisitor extends LangBaseVisitor<Node> {
 		LValue lvalue = (LValue) ctx.lvalue().accept(this);
 		String id = ctx.getChild(2).getText();
 		String dataName = ctx.lvalue().getText();
+		System.out.println(dataName);
 		return new DotLValue(l, c, lvalue, id, dataName);
 
 	}

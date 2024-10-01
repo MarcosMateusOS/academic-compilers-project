@@ -21,4 +21,8 @@ public class NameType extends Type{
     public void accept(Visitor v) {
         v.visit(this);
     }
+    
+    public String getName() {
+    	return this.nameType;
+    }
 }

@@ -1,0 +1,300 @@
+group jasmin;
+
+program(name, funcs, datas) ::= <<
+.source <name>
+.class public <name>
+.super java/lang/Object
+
+	
+    <funcs; separator="\n\n">
+    
+    
+
+    .method public static main([Ljava/lang/String;)V
+        .limit stack 1
+        ldc 0  ; 
+        anewarray java/lang/String
+        invokestatic <name>/inicio([Ljava/lang/String;)V
+        return
+    .end method
+   
+
+<datas; separator="\n\n">
+
+>>
+
+func(return, name, params, decls, stack, cmds) ::= <<
+.method static <name>(<params>)<return>
+    .limit stack <stack>
+    .limit locals <decls>
+    <cmds; separator="\n">
+    return
+.end method
+>>
+
+data(name, decls, gets, sets) ::= <<
+
+.class public <name>
+.super java/lang/Object
+
+	<decls; separator="\n">
+	
+	<gets; separator="\n">
+	
+	<sets; separator="\n">
+	
+	.method public <name>()V
+	    .limit stack 2
+	    .limit locals 1
+	    aload_0
+	    invokespecial java/lang/Object/<name>()V
+	    return
+	.end method
+
+	
+>>
+
+decl(id,type) ::= ".field public <id> <type>"
+
+get(name,type,name_data) ::= <<
+.method public get<name>()<type>
+    .limit stack 1
+    .limit locals 1
+    aload_0
+    getfield <name_data>/<name> <type>
+    return
+.end method
+
+>>
+
+set(name,type,name_data) ::= <<
+.method public set<name>(<type>)V
+    .limit stack 2
+    .limit locals 2
+    aload_0
+    aload_1
+    putfield <name_data>/<name> <type>
+    return
+.end method
+>>
+
+
+
+array_type(type) ::= "[<type>"
+int_type() ::= "I"
+float_type() ::= "F"
+boolean_type() ::= "Z"
+
+stmt_list(stmt1, stmt2) ::= <<
+<stmt1>
+<stmt2>
+>>
+
+cmd(stmt) ::= <%<stmt>%>
+
+
+iprint_int(expr) ::= <<
+getstatic java/lang/System/out Ljava/io/PrintStream;
+<expr>
+invokevirtual java/io/PrintStream/print(I)V
+>>
+
+iprint_string(expr) ::= <<
+getstatic java/lang/System/out Ljava/io/PrintStream;
+<expr>
+invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+>>
+
+iread(expr,name) ::= <<
+new java/util/Scanner
+dup
+getstatic java/lang/System/in Ljava/io/InputStream;
+invokespecial java/util/Scanner/<name>(Ljava/io/InputStream;)V
+invokevirtual java/util/Scanner/nextInt()I
+<expr>
+>>
+
+sread(var) ::= <<
+new java/util/Scanner
+dup
+getstatic java/lang/System/in Ljava/io/InputStream;
+invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V
+invokevirtual java/util/Scanner/nextLine()Ljava/lang/String;
+<expr>
+>>
+
+
+ireturn(expr) ::= <<
+<expr>
+ireturn
+>>
+
+multireturn(expr, num, index) ::= <<
+bipush <num>         
+newarray int                  
+dup                           
+<expr; separator="\n">        
+aload <index>                 ; Carrega a posição específica do array (índice)
+iaload                        ; Carrega o valor da posição <index> do array
+ireturn                       ; Retorna o valor do índice específico                     
+>>
+
+for(num, times, cmds) ::= <<
+<times>           
+istore <num>     
+
+#<num>:
+    iload <num>   
+    iconst_0     
+    ifeq #<num>#end  
+
+    <cmds; separator="\n">  
+
+    iinc <num> -1   
+    goto #<num>     
+
+#<num>#end:
+    nop             
+>>
+
+
+
+if(num, expr, cmds, elseCmds) ::= <<
+<expr>
+ifeq #<num>
+<cmds; separator="\n">
+goto #<num>#end
+#<num>:
+<elseCmds; separator="\n">
+#<num>#end:
+nop
+>>
+
+iarray(num, expr) ::= <<
+<expr>
+newarray int
+astore <num>
+>>
+
+call(class, name, type, return, args) ::= <<
+<args; separator="\n">
+invokestatic <class>/<name>(<type>)<return>
+>>
+
+istore(var, expr) ::= <<
+<expr>
+istore <var>
+
+>>
+
+iastore(var) ::= <<
+astore <var>
+
+>>
+
+
+
+iastore(num, index, expr) ::= <<
+aload <num>
+<index>
+<expr>
+iastore
+>>
+
+
+iaaccess(num, expr) ::= <<
+aload <num>
+<expr>
+iaload
+>>
+
+iaload(num) ::= <<
+aload <num>
+>>
+
+imul(left, right) ::= <<
+<left>
+<right>
+imul
+>>
+
+idiv(left, right) ::= <<
+<left>
+<right>
+idiv
+>>
+
+imod(left, right) ::= <<
+<left>
+<right>
+irem
+>>
+
+iadd(left, right) ::= <<
+<left>
+<right>
+iadd
+>>
+
+isub(left, right) ::= <<
+<left>
+<right>
+isub
+>>
+
+ilt(num, left, right) ::= <<
+<right>
+<left>
+isub
+ifgt #<num>
+iconst_0
+goto #<num>#<num>
+#<num>:
+iconst_1
+#<num>#<num>:
+>>
+
+iequals(num, left, right) ::= <<
+<left>
+<right>
+isub
+ifeq #<num>
+iconst_0
+goto #<num>#<num>
+#<num>:
+iconst_1
+#<num>#<num>:
+>>
+
+innotequals(num, left, right) ::= <<
+<left>
+<right>
+isub
+ifne #<num>  
+iconst_0   
+goto #<num>#<num>  
+#<num>:      
+iconst_1     
+#<num>#<num>: 
+>>
+
+not(expr) ::= <<
+<expr>
+iconst_1
+ixor
+>>
+
+and(left, right) ::= <<
+<left>
+<right>
+iand
+>>
+data_type(name) ::= "<name>"
+boolean_true() ::= "iconst_1"
+boolean_false() ::= "iconst_0"
+float(value) ::= "ldc <value>"
+char(value) ::= "ldc <value>"
+int_expr(value) ::= "sipush <value>"
+iaccess(num) ::= <<
+iload <num>
+>>

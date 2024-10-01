@@ -1,18 +1,16 @@
-data Ponto {
+--Saída esperada
+
+---- The marvelous env Debugger ------ 
+--p  :  {x=10, y=10}
+
+
+data Ponto{
    x :: Float;
    y :: Float;
-   y :: Float;
 }
-
-data Ponto {
-   x :: Float;
-   y :: Float;
-   y :: Float;
-}
-
 
 main(){
-    x = new Ponto;
-    x.z = 1;
-   print x.x;
+   p = new Ponto ;
+
 }
+

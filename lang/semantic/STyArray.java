@@ -4,7 +4,7 @@ public class STyArray extends SType {
 
 	private SType type;
 
-	private STyArray(SType type) {
+	public STyArray(SType type) {
 		this.type = type;
 	}
 

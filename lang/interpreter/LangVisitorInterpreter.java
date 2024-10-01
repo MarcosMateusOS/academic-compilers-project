@@ -63,11 +63,12 @@ import lang.ast.TypeObject;
 public class LangVisitorInterpreter extends Visitor {
 	private HashMap<String, Data> datas; // HashMap para armazenar toda as datas do programa
 	private HashMap<String, Function> functions;// HashMap para armazenar toda as funções
-	private Stack<HashMap<String, Object>> env;// Pilha que representa o escopo, armazena nomes de variáveis e seus valores atuais.
-	private Stack<Object> operands; //Pilha usada para avaliar expressões e armazenar resultados intermediários
+	private Stack<HashMap<String, Object>> env;// Pilha que representa o escopo, armazena nomes de variáveis e seus
+												// valores atuais.
+	private Stack<Object> operands; // Pilha usada para avaliar expressões e armazenar resultados intermediários
 	private Stack<Object> params; // Pilha para gerenciar parâmetros de chamadas de função.
-	private boolean modeDebug, retMode; //modeDebug: flag para gerir detalhes para debug - retMode: flag para gerenciar saídas de função
-
+	private boolean modeDebug, retMode; // modeDebug: flag para gerir detalhes para debug - retMode: flag para gerenciar
+										// saídas de função
 
 	public LangVisitorInterpreter() {
 		/* Construtor inicializando o interpretador */
@@ -102,7 +103,7 @@ public class LangVisitorInterpreter extends Visitor {
 				if (func.getID().equals("main")) {
 					main = func;
 				}
-				
+
 				functions.put(func.getID(), func);
 			}
 
@@ -137,9 +138,9 @@ public class LangVisitorInterpreter extends Visitor {
 				System.out.println(it.toString());
 			}
 			if (params.size() != 0) {
-				//System.out.println("-------------- PARAMS ----------------");
+				// System.out.println("-------------- PARAMS ----------------");
 				operands.push(params.pop());
-				//System.out.println("STACK OPERANDS: " + operands);
+				// System.out.println("STACK OPERANDS: " + operands);
 			} else {
 				operands.push(it);
 			}
@@ -208,9 +209,8 @@ public class LangVisitorInterpreter extends Visitor {
 			// Se a função tiver parâmetros
 			if (f.getParams() != null) {
 				Params funcParams = f.getParams();
-				
+
 				List<String> paramsIds = funcParams.getIDs();
-				
 
 				// Processa os parâmetros e empilha seus valores
 				funcParams.accept(this);
@@ -221,7 +221,7 @@ public class LangVisitorInterpreter extends Visitor {
 				}
 			}
 
-			//Insere o ambiente local na pilha de ambientes
+			// Insere o ambiente local na pilha de ambientes
 			env.push(localEnv);
 
 			// Executa cada comando no corpo da função
@@ -234,7 +234,7 @@ public class LangVisitorInterpreter extends Visitor {
 			// Remove o ambiente local após a execução
 			env.pop();
 			retMode = false;
-			
+
 		} catch (Exception x) {
 			this.throwRuntimeException(f, x.getMessage());
 		}
@@ -410,7 +410,7 @@ public class LangVisitorInterpreter extends Visitor {
 			Exp condition = iteratec.getExp();
 			condition.accept(this);
 
-			Object obj = operands.pop(); // Desempilha a condição 
+			Object obj = operands.pop(); // Desempilha a condição
 
 			// Executa o loop enquanto a condição for verdadeira
 
@@ -536,7 +536,7 @@ public class LangVisitorInterpreter extends Visitor {
 
 			LValue lvalue = assignc.getLValue(); // lado esquerdo da atribuição
 
-			//Atribuição para variáveis simples
+			// Atribuição para variáveis simples
 			if (lvalue instanceof IDLValue) {
 				Object value = operands.pop();
 
@@ -550,7 +550,7 @@ public class LangVisitorInterpreter extends Visitor {
 				env.peek().put(((IDLValue) lvalue).getID(), value);
 			}
 
-      //atribuição para acessos a propriedades de objetos
+			// atribuição para acessos a propriedades de objetos
 			else if (lvalue instanceof DotLValue) {
 				DotLValue dotLValue = (DotLValue) lvalue;
 				LValue innerLValue = dotLValue.getLValue();
@@ -574,9 +574,9 @@ public class LangVisitorInterpreter extends Visitor {
 
 					HashMap<String, Object> object = (HashMap<String, Object>) env.peek().get(dataName);
 					TypeObject objVar = (TypeObject) object.get(innerLValue.getID());
-					
+
 					if (objVar != null) {
-						if(objVar.getType().getClass() != value.getClass()) {
+						if (objVar.getType().getClass() != value.getClass()) {
 							throw new RuntimeException("Atribuição inválida tipo diferente: " + lvalue.getID());
 						}
 					}
@@ -631,7 +631,7 @@ public class LangVisitorInterpreter extends Visitor {
 				int expectedParams = funct.getParams().getIDs().size();
 				int providedParams = paramsFcall.getExps().size();
 
-        //Tratamento de exceção para número de parâmetros inválidos
+				// Tratamento de exceção para número de parâmetros inválidos
 				if (expectedParams != providedParams)
 					throw new RuntimeException("Número de argumentos fornecidos (" + providedParams
 							+ ") não corresponde ao número de parâmetros esperados (" + expectedParams
@@ -650,7 +650,7 @@ public class LangVisitorInterpreter extends Visitor {
 
 			if (lvalues != null) {
 				// Verifica se a função tem valores de retorno
-        // Inverte a ordem dos valores de retorno para atribuir corretamente
+				// Inverte a ordem dos valores de retorno para atribuir corretamente
 				for (int i = lvalues.size() - 1; i >= 0; i--) {
 					LValue l = lvalues.get(i);
 
@@ -762,12 +762,11 @@ public class LangVisitorInterpreter extends Visitor {
 	public void visit(MinusExp minusExp) {
 		try {
 			minusExp.getLeft().accept(this);
-			Object left = operands.pop(); 
+			Object left = operands.pop();
 
 			minusExp.getRight().accept(this);
-			Object right = operands.pop(); 
+			Object right = operands.pop();
 
-			
 			operands.push(this.mathOperations(left, right, '-'));
 
 		} catch (Exception x) {
@@ -955,8 +954,6 @@ public class LangVisitorInterpreter extends Visitor {
 					newexp.getType().accept(this); // Processa o tipo
 					newexp.getExp().accept(this); // Processa a expressão que determina o tamanho do array
 
-	
-
 					// Pega o tamanho do array de tipos
 					Integer size = (Integer) operands.pop();
 					Object types = operands.pop();
@@ -972,12 +969,10 @@ public class LangVisitorInterpreter extends Visitor {
 				} else {
 					String dataName = newexp.getDataName();
 
-				
-
 					HashMap<String, Object> vars = new HashMap<String, Object>();
 
 					for (DataDeclaration dataDeclaration : datas.get(dataName).getDeclarations()) {
-						
+
 						dataDeclaration.getType().accept(this);
 						dataDeclaration.toString();
 						operands.pop();
@@ -1148,7 +1143,7 @@ public class LangVisitorInterpreter extends Visitor {
 						Object value = map.get(dotLvalue.getID()); // Recupera o valor do atributo
 
 						if (value instanceof TypeObject) {
-              // Verifica se o atributo é um objeto e se == null
+							// Verifica se o atributo é um objeto e se == null
 							TypeObject checkTypeObjectContent = (TypeObject) ((TypeObject) value).getContent();
 
 							if (checkTypeObjectContent == null)
@@ -1161,7 +1156,7 @@ public class LangVisitorInterpreter extends Visitor {
 								"Atributo '" + dotLvalue.getID() + "' não encontrado no objeto " + dotLvalue.getID());
 					}
 				} else {
-          // Empilha o valor do objeto
+					// Empilha o valor do objeto
 					operands.push(obj);
 				}
 			} else {
@@ -1217,7 +1212,6 @@ public class LangVisitorInterpreter extends Visitor {
 
 			// Executa a função
 			func.accept(this);
-			
 
 			IntVal returnIndex = (IntVal) funReturnExp.getExp(); // Recupera o índice de retorno
 			int returnIdxValue = returnIndex.getValue(); // Recupera o valor do índice de retorno
@@ -1233,7 +1227,6 @@ public class LangVisitorInterpreter extends Visitor {
 				throw new RuntimeException("Posição inválida do retorno: " + returnIdxValue);
 			}
 
-
 			if (functionReturnTypes.size() > 1) { // Verifica se há múltiplos valores de retorno
 
 				for (int i = functionReturnTypes.size() - 1; i >= 0; i--) {
@@ -1244,7 +1237,8 @@ public class LangVisitorInterpreter extends Visitor {
 				}
 			} else if (functionReturnTypes.size() == 1) { // Quando tiver somente 1 retorno
 				if (returnIdxValue == 0) {
-         // O valor está no topo da pilha de operandos por isso não é necessário fazer nada
+					// O valor está no topo da pilha de operandos por isso não é necessário fazer
+					// nada
 				} else {
 					throw new RuntimeException(" (" + funReturnExp.getLine() + ", " + funReturnExp.getColumn()
 							+ ") Acesso a posição inválida de elemento no retorno da função");
@@ -1256,7 +1250,7 @@ public class LangVisitorInterpreter extends Visitor {
 		}
 	}
 
-  // Método para realizar operações matemáticas
+	// Método para realizar operações matemáticas
 	private Number mathOperations(Object left, Object right, char operation) {
 		try {
 
@@ -1303,7 +1297,7 @@ public class LangVisitorInterpreter extends Visitor {
 		}
 	}
 
-  // Método para comparar valores
+	// Método para comparar valores
 	private boolean compareValues(Object left, Object right, String comparison) {
 		try {
 

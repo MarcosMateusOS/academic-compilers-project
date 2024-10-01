@@ -23,6 +23,12 @@ public class SemanticImplementation implements SemanticAdaptor {
 			CommonTokenStream tokens = new CommonTokenStream(lex);
 			LangParser parser = new LangParser(tokens);
 			
+			
+			tokens.fill(); // Carregar todos os tokens
+			for (Token token : tokens.getTokens()) {
+				System.out.println("Token: " + token.getText() + " Tipo: " + lex.getVocabulary().getSymbolicName(token.getType()) + 
+					" Linha: " + token.getLine() + " Posição: " + token.getCharPositionInLine());
+			}
 		
 			lex.addErrorListener(new BaseErrorListener() {
 				@Override
