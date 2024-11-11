@@ -1,0 +1,66 @@
+group python;
+
+program(datas, funcs) ::= <<
+<datas; separator="\n\n">
+
+<funcs; separator="\n\n">
+
+main()
+>>
+
+data(name, decl) ::= <<
+class <name>:
+    def __init__(self):
+<decl; separator="\n">
+>>
+
+
+func(name, params, cmds) ::= <<
+def <name>(<params>):
+ <cmds; separator="\n">
+>>
+
+param(id) ::= <%<id; separator=", ">%>
+
+decl(id) ::= "        self.<id> = None"
+
+cmd(stmt) ::= <%<stmt; separator="\n">%>
+
+assign(var, exp) ::= "<var> = <exp>"
+
+
+
+exp(left, oper, right) ::= "<left> <oper> <right>"
+
+functionCall(functionName, params, return, index) ::= <<
+<if(return)><return; separator=", "> = <endif><functionName>(<params>)<if(index)>[<index>]<endif>
+>>
+
+if(test, cmds, elseCmds) ::= <<
+if <test>:
+    <cmds; separator="\n">
+<if(elseCmds)>else:<endif>
+    <elseCmds>
+>>
+
+iterate(numLoop, cmds) ::= <<
+for _ in range(<numLoop>):
+     <cmds; separator="\n">
+>>
+
+print(exp) ::= <%print(<exp>,end=''),%>
+
+array(type) ::= "<type>"
+
+int_type() ::= "int"
+float_type() ::= "float"
+boolean_type() ::= "bool"
+char_type() ::= "char"
+data_type(data) ::= "<data>"
+null_type() ::= "None"
+
+separatedValues(value) ::= <%<value; separator=", ">%>
+array_comprehension(type, size) ::= "[<type>() for _ in range(<size>)]"
+matrix(type, l, c) ::= "[[<type>() for _ in range(<c>)] for _ in range(<l>)]"
+
+
