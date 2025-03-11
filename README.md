@@ -1,4 +1,4 @@
-# Compiladores Acadêmico
+# Compiladoror
 
 Este repositório contém um **projeto acadêmico de compiladores**, desenvolvido como parte de um estudo sobre design e implementação de compiladores. O projeto foca na construção de um **interpretador** e um **verificador de tipos** para uma pequena linguagem funcional, incorporando conceitos essenciais como **árvores sintáticas abstratas (AST), inferência de tipos e avaliação de expressões**.
 
